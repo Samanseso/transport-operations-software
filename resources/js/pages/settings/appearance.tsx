@@ -7,6 +7,7 @@ import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import { appearance } from '@/routes';
+import { SidebarProvider } from '@/components/ui/sidebar';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -17,15 +18,17 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Appearance() {
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Appearance settings" />
+        <SidebarProvider>
+            <AppLayout breadcrumbs={breadcrumbs}>
+                <Head title="Appearance settings" />
 
-            <SettingsLayout>
-                <div className="space-y-6">
-                    <HeadingSmall title="Appearance settings" description="Update your account's appearance settings" />
-                    <AppearanceTabs />
-                </div>
-            </SettingsLayout>
-        </AppLayout>
+                <SettingsLayout>
+                    <div className="space-y-6">
+                        <HeadingSmall title="Appearance settings" description="Update your account's appearance settings" />
+                        <AppearanceTabs />
+                    </div>
+                </SettingsLayout>
+            </AppLayout>
+        </SidebarProvider>
     );
 }

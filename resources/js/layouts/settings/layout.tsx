@@ -9,21 +9,23 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 
+import { User, KeyRound, Palette } from 'lucide-react';
+
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: edit(),
-        icon: null,
+        icon: User,
     },
     {
         title: 'Password',
         href: editPassword(),
-        icon: null,
+        icon: KeyRound,
     },
     {
         title: 'Appearance',
         href: appearance(),
-        icon: null,
+        icon: Palette,
     },
 ];
 

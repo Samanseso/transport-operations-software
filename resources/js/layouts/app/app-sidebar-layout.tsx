@@ -2,13 +2,14 @@ import { AppContent } from '@/components/app-content';
 import { AppShell } from '@/components/app-shell';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppSidebarHeader } from '@/components/app-sidebar-header';
-import { type BreadcrumbItem } from '@/types';
+import { SidebarNavItems, type BreadcrumbItem } from '@/types';
 import { type PropsWithChildren } from 'react';
 
-export default function AppSidebarLayout({ children, breadcrumbs = [] }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[] }>) {
+
+export default function AppSidebarLayout({ children, breadcrumbs = [], navItems }: PropsWithChildren<{ breadcrumbs?: BreadcrumbItem[], navItems: SidebarNavItems }>) {
     return (
         <AppShell variant="sidebar">
-            <AppSidebar />
+            <AppSidebar navItems={navItems}/>
             <AppContent variant="sidebar" className="overflow-x-hidden">
                 <AppSidebarHeader breadcrumbs={breadcrumbs} />
                 {children}

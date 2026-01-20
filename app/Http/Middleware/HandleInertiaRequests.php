@@ -46,6 +46,13 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'modal' => [
+                'open' => true,
+                'status' => fn () => $request->session()->get('modal_status'),
+                'action' => fn () => $request->session()->get('modal_action'),
+                'title' => fn () => $request->session()->get('modal_title'),
+                'message' => fn () => $request->session()->get('modal_message')
+            ],
         ];
     }
 }

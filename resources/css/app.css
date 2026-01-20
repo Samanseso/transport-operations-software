@@ -1,4 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+
 @import 'tailwindcss';
+
+
+
+@import '../../node_modules/leaflet/dist/leaflet.css';
 
 @plugin 'tailwindcss-animate';
 
@@ -138,4 +144,85 @@
     body {
         @apply bg-background text-foreground;
     }
+}
+
+html {
+    scrollbar-width: none;
+}
+
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+}
+
+@media screen and (max-width: 980px) {
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: 0.625em;
+    }
+
+    table td {
+        border-bottom: 0px solid #ddd;
+        display: block;
+        font-size: 0.8em;
+        text-align: left;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        width: 150px;
+    }
+
+    table td:last-child::before {
+        padding-top: 9px;
+    }
+}
+
+.id-code-font {
+    font-family: 'Source Code Pro', monospace;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'license';
+    src: url('fonts/LicensePlate.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.license-font {
+    font-family: 'license', sans-serif;
+}
+
+.timeline {
+    margin-top: 4px;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background-color: #4e4e4e;
+    border-radius: 50%;
+    position: relative;
+}
+
+.line {
+    width: 1.25px;
+    height: 19px;
+    background-color: #a2a2a2;
+    margin-left: 2.5px;
 }
