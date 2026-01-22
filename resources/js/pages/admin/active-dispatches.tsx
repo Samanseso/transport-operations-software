@@ -101,29 +101,6 @@ const ActiveDispatches = () => {
 
 						{selectedReservation && <MapRoute reservation={selectedReservation} padding={400} />}
 
-						{/* <MapContainer center={[14.66255, 120.96353]} zoom={13} scrollWheelZoom={false} className='z-0'>
-						<TileLayer
-							attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-							url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-						/>
-						<RoutingMachine
-							waypoints={[
-								new LatLng(parseFloat(selectedReservation.pickup_latlng.split(",")[0]), parseFloat(selectedReservation.pickup_latlng.split(",")[1])),
-								new LatLng(parseFloat(selectedReservation.dropoff_latlng.split(",")[0]), parseFloat(selectedReservation.dropoff_latlng.split(",")[1])),
-							]}
-
-							createMarker={
-								(i: number, wp: L.Routing.Waypoint, nWps: number) => {
-									let popupContent = "";
-									if (i === 0) popupContent = "Pickup: " + selectedReservation.pickup_address;
-									else if (i === nWps - 1) popupContent = "Dropoff: " + selectedReservation.dropoff_address;
-
-									return L.marker(wp.latLng).bindPopup(popupContent);
-								}
-							}
-						/> 
-
-					</MapContainer> */}
 					</div>
 				</div>
 			</AppLayout>

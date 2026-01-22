@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 
 import AvatarImageSource from '../../../../public/assets/images/avatar.png';
 import { Avatar, AvatarImage } from '@radix-ui/react-avatar';
+import MapRoute from '@/components/map-route';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -73,7 +74,7 @@ const TaskDetails = () => {
         //         (err) => console.error("Geolocation error:", err),
         //         { enableHighAccuracy: true }
         //     );
-        // }, 5000); // every 10s
+        // }, 1000); 
 
         // return () => clearInterval(interval);
     }, []);
@@ -87,41 +88,8 @@ const TaskDetails = () => {
                 <div className=''>
 
                     <div className='' style={{ width: '100vw', height: '70vh' }}>
-                        {/* <MapRoute reservation={props.reservation} padding={0} /> */}
+                        <MapRoute reservation={props.reservation} padding={0} />
 
-                        <MapContainer center={position} zoom={15} scrollWheelZoom={false} className='z-0'>
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
-                            />
-
-
-
-                            {/* <RoutingMachine
-                                waypoints={[
-                                    new LatLng(parseFloat(props.reservation.pickup_latlng.split(",")[0]), parseFloat(props.reservation.pickup_latlng.split(",")[1])),
-                                    new LatLng(parseFloat(props.reservation.dropoff_latlng.split(",")[0]), parseFloat(props.reservation.dropoff_latlng.split(",")[1])),
-                                ]}
-
-                                createMarker={
-                                    (i: number, wp: L.Routing.Waypoint, nWps: number) => {
-                                        let popupContent = "";
-                                        if (i === 0) popupContent = "Pickup: " + props.reservation.pickup_address;
-                                        else if (i === nWps - 1) popupContent = "Dropoff: " + props.reservation.dropoff_address;
-
-                                        return L.marker(wp.latLng).bindPopup(popupContent);
-                                    }
-                                }
-
-                                setBounds={setBounds}
-
-
-                            /> 
-                             <Marker position={position} /> 
-                             <CurrentLocation position={position} setBounds={setBounds} />  */}
-
-
-                        </MapContainer>
                     </div>
 
                     <div className='rounded-xl bg-white -translate-y-10'>

@@ -13,7 +13,6 @@ import '../bootstrap';
 import { getRoutes } from '@/lib/utils';
 import RoutePolyline from './route-polyline';
 import LiveVehicleLocation from './live-vehicle-location';
-import { Button } from './ui/button';
 
 interface MapRouteProps {
     reservation: Reservation;
@@ -31,7 +30,7 @@ interface routeSummary {
 const MapRoute = ({ reservation, padding }: MapRouteProps) => {
 
 
-    const [vehicleLoc, setVehicleLoc] = useState<LatLng>(new LatLng(14.67255, 121.00055));
+    const [vehicleLoc, setVehicleLoc] = useState<LatLng>(new LatLng(14.577499898900426, 121.10226399999999));
     const [routePoints, setRoutePoints] = useState<LatLng[]>([]);
     const waypoints = [
         new LatLng(parseFloat(reservation.pickup_latlng.split(",")[0]), parseFloat(reservation.pickup_latlng.split(",")[1])),
@@ -41,7 +40,7 @@ const MapRoute = ({ reservation, padding }: MapRouteProps) => {
     useEffect(() => {
 
         const interval = setInterval(() => {
-            //setVehicleLoc(prev => new LatLng(prev.lat + 0.00005, prev.lng))
+            setVehicleLoc(prev => new LatLng(prev.lat - 0.00005, prev.lng - 0.00005))
         }, 500)
 
         getRoutes(
@@ -88,39 +87,16 @@ const MapRoute = ({ reservation, padding }: MapRouteProps) => {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
                         />
-                        {/* <RoutingMachine
-                            waypoints={[
-                                new LatLng(parseFloat(reservation.pickup_latlng.split(",")[0]), parseFloat(reservation.pickup_latlng.split(",")[1])),
-                                new LatLng(parseFloat(reservation.dropoff_latlng.split(",")[0]), parseFloat(reservation.dropoff_latlng.split(",")[1])),
-                            ]}
-
-                            createMarker={
-                                (i: number, wp: L.Routing.Waypoint, nWps: number) => {
-                                    let popupContent = "";
-                                    if (i === 0) popupContent = "Pickup: " + reservation.pickup_address;
-                                    else if (i === nWps - 1) popupContent = "Dropoff: " + reservation.dropoff_address;
-
-                                    return L.marker(wp.latLng).bindPopup(popupContent);
-                                }
-                            }
-
-                            setBounds={setBounds}
-                        /> */}
-
                         
 
-                        {/* {routePoints.length > 0 && (
+                        {routePoints.length > 0 && (
                             <RoutePolyline routePoints={routePoints} driverPos={vehicleLoc} setBounds={setBounds} />
-                        )} */}
+                        )}
 
                         {vehicleLoc && <LiveVehicleLocation vehicleLoc={vehicleLoc} />}
 
                         <Marker position={waypoints[0]} />
                         <Marker position={waypoints[1]} />
-                        
-
-                        <Button>123</Button>
-
 
                     </MapContainer>
               
