@@ -82,7 +82,7 @@ const ActiveReservations = () => {
                     </div>
                     <div className="flex-3 relative overflow-hidden rounded-s-md" style={{ height: 'calc(100vh - 85px)', width: '100%' }}>
                         {selectedReservation && <FloatingReservationDetails reservation={selectedReservation} />}
-                        {selectedReservation && <MapRoute reservation={selectedReservation} padding={400} />}
+                        {selectedReservation && <MapRoute reservation={selectedReservation} padding={50} />}
                     </div>
                 </div>
             </AppLayout>

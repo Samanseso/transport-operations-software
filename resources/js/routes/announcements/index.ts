@@ -137,7 +137,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
  * @see app/Http/Controllers/AnnouncementController.php:149
  * @route '/announcements/{announcement}'
  */
-export const update = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+export const update = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -152,7 +152,7 @@ update.definition = {
  * @see app/Http/Controllers/AnnouncementController.php:149
  * @route '/announcements/{announcement}'
  */
-update.url = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { announcement: args }
     }
@@ -185,7 +185,7 @@ update.url = (args: { announcement: string | number | { announcement_id: string 
  * @see app/Http/Controllers/AnnouncementController.php:149
  * @route '/announcements/{announcement}'
  */
-update.patch = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
@@ -195,7 +195,7 @@ update.patch = (args: { announcement: string | number | { announcement_id: strin
  * @see app/Http/Controllers/AnnouncementController.php:149
  * @route '/announcements/{announcement}'
  */
-    const updateForm = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const updateForm = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PATCH',
@@ -210,7 +210,7 @@ update.patch = (args: { announcement: string | number | { announcement_id: strin
  * @see app/Http/Controllers/AnnouncementController.php:149
  * @route '/announcements/{announcement}'
  */
-        updateForm.patch = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        updateForm.patch = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PATCH',
@@ -226,7 +226,7 @@ update.patch = (args: { announcement: string | number | { announcement_id: strin
  * @see app/Http/Controllers/AnnouncementController.php:173
  * @route '/announcements/{announcement}'
  */
-export const destroy = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+export const destroy = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -241,7 +241,7 @@ destroy.definition = {
  * @see app/Http/Controllers/AnnouncementController.php:173
  * @route '/announcements/{announcement}'
  */
-destroy.url = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions) => {
+destroy.url = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { announcement: args }
     }
@@ -274,7 +274,7 @@ destroy.url = (args: { announcement: string | number | { announcement_id: string
  * @see app/Http/Controllers/AnnouncementController.php:173
  * @route '/announcements/{announcement}'
  */
-destroy.delete = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
+destroy.delete = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(args, options),
     method: 'delete',
 })
@@ -284,7 +284,7 @@ destroy.delete = (args: { announcement: string | number | { announcement_id: str
  * @see app/Http/Controllers/AnnouncementController.php:173
  * @route '/announcements/{announcement}'
  */
-    const destroyForm = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const destroyForm = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: destroy.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'DELETE',
@@ -299,7 +299,7 @@ destroy.delete = (args: { announcement: string | number | { announcement_id: str
  * @see app/Http/Controllers/AnnouncementController.php:173
  * @route '/announcements/{announcement}'
  */
-        destroyForm.delete = (args: { announcement: string | number | { announcement_id: string | number } } | [announcement: string | number | { announcement_id: string | number } ] | string | number | { announcement_id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        destroyForm.delete = (args: { announcement: string | { announcement_id: string } } | [announcement: string | { announcement_id: string } ] | string | { announcement_id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: destroy.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'DELETE',

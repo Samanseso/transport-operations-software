@@ -30,9 +30,9 @@ return [
 
         'reverb' => [
             'host' => '0.0.0.0',
-            'port' => env('PORT', 10000),
+            'port' => env('REVERB_SERVER_PORT', env('REVERB_PORT', 6001)),
             'path' => '',
-            'hostname' => 'transport-operations-ws.onrender.com',
+            'hostname' => env('REVERB_HOST'),
 
             'options' => [
                 'tls' => [],
@@ -68,15 +68,15 @@ return [
 
         'apps' => [
             [
-                'key' => 'cfvbmtogk4rzm2nh7ijt',
-                'secret' => 'reverb-secret',
-                'app_id' => 'reverb-app',
+                'key' => env('REVERB_APP_KEY'),
+                'secret' => env('REVERB_APP_SECRET'),
+                'app_id' => env('REVERB_APP_ID'),
 
                 'options' => [
-                    'host' => 'transport-operations-ws.onrender.com',
-                    'port' => 443,
-                    'scheme' => 'https',
-                    'useTLS' => true,
+                    'host' => env('REVERB_HOST'),
+                    'port' => env('REVERB_PORT'),
+                    'scheme' => env('REVERB_SCHEME', 'http'),
+                    'useTLS' => env('REVERB_SCHEME') === 'https',
                 ],
 
                 'allowed_origins' => ['*'],

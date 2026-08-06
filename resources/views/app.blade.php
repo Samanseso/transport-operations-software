@@ -39,6 +39,15 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
+        <script>
+            window.__REVERB = {
+                key: "{{ env('VITE_REVERB_APP_KEY', env('REVERB_APP_KEY', '')) }}",
+                host: "{{ env('VITE_REVERB_HOST', env('REVERB_HOST', request()->getHost())) }}",
+                port: "{{ env('VITE_REVERB_PORT', env('REVERB_PORT', 6001)) }}",
+                scheme: "{{ env('VITE_REVERB_SCHEME', env('REVERB_SCHEME', request()->getScheme())) }}",
+            };
+        </script>
+
         @viteReactRefresh
         @vite(['resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         @inertiaHead

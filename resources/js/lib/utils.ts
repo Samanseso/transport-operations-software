@@ -54,10 +54,10 @@ export async function getRoutes(
     const locale = options?.locale ?? "en";
 
 
-    // Build points: driver first, then stops in order
-    const allPoints = [driver, ...stops];
+    // Build points: driver first (if provided), then stops in order
+    const allPoints = [driver, ...stops].filter((p): p is LatLng => p != null);
     const pointsQuery = allPoints
-        .map(p => p ? `point=${p.lat},${p.lng}` : null)
+        .map(p => `point=${p.lat},${p.lng}`)
         .join("&");
     console.log(allPoints, pointsQuery);
     // GraphHopper query: points_encoded=false returns coordinates array [lon,lat]

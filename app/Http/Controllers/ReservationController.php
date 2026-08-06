@@ -116,6 +116,7 @@ class ReservationController extends Controller
         if ($request->user()->role === 'CUSTOMER') {
             return redirect()->route('my-reservations.index');
         }
+        
         $query = Reservation::with(['customer', 'dispatch']);
 
         $search = trim((string) $request->query('q', ''));

@@ -81,7 +81,7 @@ const ActiveDispatches = () => {
 
 						{selectedReservation && <>
 							<FloatingReservationDetails reservation={selectedReservation} />
-							<MapRoute reservation={selectedReservation} padding={400} />
+							<MapRoute reservation={selectedReservation} padding={50} />
 						</>}
 
 					</div>
