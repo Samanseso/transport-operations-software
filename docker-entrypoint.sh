@@ -20,8 +20,8 @@ php artisan view:clear
 php artisan cache:clear
 
 
-# Run database migrations (fail fast if this does not succeed)
-php artisan migrate --seed --force
+# Run database migrations (drop all tables first, recreate & seed)
+php artisan migrate:fresh --seed --force
 
 # Start supervisor
 exec "$@"

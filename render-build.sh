@@ -16,7 +16,7 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-echo "--- Running Database Migrations ---"
-php artisan migrate --force
+echo "--- Running Database Migrations (Fresh & Seed) ---"
+php artisan migrate:fresh --seed --force
 
 echo "--- Render Build Complete! ---"
