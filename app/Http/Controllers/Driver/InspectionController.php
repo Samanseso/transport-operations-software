@@ -17,7 +17,7 @@ class InspectionController extends Controller
     public function index(Request $request): Response
     {
         $user = $request->user();
-        $driver = Driver::where('name', $user->name)->orWhere('contact_number', $user->email)->first();
+        $driver = Driver::where('user_id', $user->id)->orWhere('driver_id', $user->role_id)->first();
         $assignedVehicle = $driver ? Vehicle::where('driver_id', $driver->driver_id)->first() : null;
         $recentInspections = VehicleInspection::with(['vehicle', 'driver'])
             ->orderBy('inspected_at', 'desc')

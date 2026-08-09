@@ -16,7 +16,7 @@ class FleetController extends Controller
 {
     public function index(Request $request)
     {
-        $allDrivers = Driver::orderBy('name', 'asc')->get();
+        $allDrivers = Driver::with('user')->get()->sortBy('name')->values();
         $recentVehicleLogs = SystemLog::where('module', 'VEHICLES')
             ->orderBy('datelog', 'desc')
             ->orderBy('timelog', 'desc')
@@ -32,7 +32,7 @@ class FleetController extends Controller
 
     public function show($vehicle_id)
     {
-        $allDrivers = Driver::orderBy('name', 'asc')->get();
+        $allDrivers = Driver::with('user')->get()->sortBy('name')->values();
 
         $vehicle_reservations = Reservation::whereIn('reservation_id', Dispatch::where("vehicle_id", $vehicle_id)
         ->pluck('reservation_id'))

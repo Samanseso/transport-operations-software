@@ -39,6 +39,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('fleet/maintenance', [\App\Http\Controllers\Fleet\MaintenanceController::class, 'index'])->name('fleet.maintenance.index');
     Route::post('fleet/maintenance', [\App\Http\Controllers\Fleet\MaintenanceController::class, 'store'])->name('fleet.maintenance.store');
+    Route::post('fleet/spare-parts', [\App\Http\Controllers\Fleet\SparePartController::class, 'store'])->name('fleet.spare-parts.store');
+    Route::put('fleet/spare-parts/{sparePart}', [\App\Http\Controllers\Fleet\SparePartController::class, 'update'])->name('fleet.spare-parts.update');
+    Route::delete('fleet/spare-parts/{sparePart}', [\App\Http\Controllers\Fleet\SparePartController::class, 'destroy'])->name('fleet.spare-parts.destroy');
     Route::get('fleet/telematics', [\App\Http\Controllers\Fleet\TelematicsController::class, 'index'])->name('fleet.telematics.index');
 
     if (config('app.debug')) {

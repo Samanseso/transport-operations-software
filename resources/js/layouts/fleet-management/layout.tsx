@@ -43,19 +43,19 @@ export default function FleetmanagementLayout({ children, vehicles, selectedVehi
                 <aside className="w-full max-w-xl lg:w-65">
                     <nav className="flex flex-col space-y-2 space-x-0">
                         <Link href={index()}>
-                            <Button variant={currentPath.endsWith('/overview') ? 'outline' : 'ghost'} className="w-full justify-start gap-2">
+                            <Button variant={currentPath.endsWith('/overview') ? 'secondary' : 'ghost'} className="w-full justify-start gap-2">
                                 <FileSearch className="h-4 w-4" />
                                 Overview
                             </Button>
                         </Link>
                         <Link href="/fleet/maintenance">
-                            <Button variant={currentPath.includes('/maintenance') ? 'outline' : 'ghost'} className="w-full justify-start gap-2">
+                            <Button variant={currentPath.includes('/maintenance') ? 'secondary' : 'ghost'} className="w-full justify-start gap-2">
                                 <ClipboardPen className="h-4 w-4" />
                                 Maintenance Logs
                             </Button>
                         </Link>
                         <Link href="/fleet/fuel">
-                            <Button variant={currentPath.includes('/fuel') ? 'outline' : 'ghost'} className="w-full justify-start gap-2">
+                            <Button variant={currentPath.includes('/fuel') ? 'secondary' : 'ghost'} className="w-full justify-start gap-2">
                                 <NotepadText className="h-4 w-4" />
                                 Fuel Tracking
                             </Button>

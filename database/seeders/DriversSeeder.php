@@ -16,7 +16,7 @@ class DriversSeeder extends Seeder
         $rows = [
             [
                 'driver_id' => 'DRV-1001',
-                'name' => 'Clarisse Reyes',
+                'user_id' => 2,
                 'contact_number' => '0917-234-5678',
                 'license_number' => 'LIC-102',
                 'status' => 'NOT AVAILABLE',
@@ -25,7 +25,7 @@ class DriversSeeder extends Seeder
             ],
             [
                 'driver_id' => 'DRV-1002',
-                'name' => 'Marco Diaz',
+                'user_id' => 3,
                 'contact_number' => '0917-888-9999',
                 'license_number' => 'LIC-103',
                 'status' => 'NOT AVAILABLE',
@@ -34,7 +34,7 @@ class DriversSeeder extends Seeder
             ],
             [
                 'driver_id' => 'DRV-1003',
-                'name' => 'Miguel Cruz',
+                'user_id' => 4,
                 'contact_number' => '0917-987-6543',
                 'license_number' => 'LIC-107',
                 'status' => 'NOT AVAILABLE',
@@ -43,7 +43,7 @@ class DriversSeeder extends Seeder
             ],
             [
                 'driver_id' => 'DRV-1004',
-                'name' => 'Elena Reyes',
+                'user_id' => 5,
                 'contact_number' => '0917-000-1234',
                 'license_number' => 'LIC-108',
                 'status' => 'AVAILABLE',
@@ -52,7 +52,7 @@ class DriversSeeder extends Seeder
             ],
             [
                 'driver_id' => 'DRV-1005',
-                'name' => 'Peter Santos',
+                'user_id' => 6,
                 'contact_number' => '0917-333-2222',
                 'license_number' => 'LIC-109',
                 'status' => 'AVAILABLE',
@@ -65,7 +65,7 @@ class DriversSeeder extends Seeder
             DB::table('drivers')->updateOrInsert(
                 ['driver_id' => $row['driver_id']],
                 [
-                    'name' => $row['name'],
+                    'user_id' => $row['user_id'],
                     'contact_number' => $row['contact_number'],
                     'license_number' => $row['license_number'],
                     'status' => $row['status'],

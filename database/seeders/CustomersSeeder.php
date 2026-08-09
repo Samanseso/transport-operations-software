@@ -15,41 +15,24 @@ class CustomersSeeder extends Seeder
     {
         $rows = [
             [
-                'customer_id' => 1,
-                'customer_name' => 'Evander Wines',
-                'email' => 0,
+                'customer_id' => 'CUST-1001',
+                'user_id' => 7,
                 'contact_number' => '09123456789',
                 'created_at' => '2025-09-24 13:18:32'
             ],
             [
-                'customer_id' => 2,
-                'customer_name' => 'Gab',
-                'email' => 0,
+                'customer_id' => 'CUST-1002',
+                'user_id' => 8,
                 'contact_number' => '09123456789',
                 'created_at' => '2025-10-16 18:12:14'
             ],
-            [
-                'customer_id' => 3,
-                'customer_name' => 'New Customer',
-                'email' => 0,
-                'contact_number' => '1235',
-                'created_at' => '2025-10-07 14:31:55'
-            ],
-            [
-                'customer_id' => 4,
-                'customer_name' => 'Sample',
-                'email' => 0,
-                'contact_number' => '09298210367',
-                'created_at' => '2025-09-24 13:20:32'
-            ]
         ];
 
         foreach ($rows as $row) {
             DB::table('customers')->updateOrInsert(
                 ['customer_id' => $row['customer_id']],
                 [
-                    'customer_name' => $row['customer_name'],
-                    'email' => $row['email'],
+                    'user_id' => $row['user_id'],
                     'contact_number' => $row['contact_number'],
                     'created_at' => $row['created_at'],
                 ]

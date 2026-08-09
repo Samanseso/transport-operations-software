@@ -12,19 +12,19 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            ApiSeeder::class,
-            CacheSeeder::class,
-            CustomersSeeder::class,
-            DispatchesSeeder::class,
-            DriversSeeder::class,
             UsersSeeder::class,
-            LogsSeeder::class,
-            MigrationsSeeder::class,
-            PaymentsSeeder::class,
+            DriversSeeder::class,
+            CustomersSeeder::class,
+            VehiclesSeeder::class,
             PricingSeeder::class,
             ReservationsSeeder::class,
+            DispatchesSeeder::class,
+            PaymentsSeeder::class,
+            LogsSeeder::class,
+            ApiSeeder::class,
+            CacheSeeder::class,
+            MigrationsSeeder::class,
             SessionsSeeder::class,
-            VehiclesSeeder::class
         ]);
     }
 }

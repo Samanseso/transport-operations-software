@@ -17,8 +17,9 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $driver_id = $request->user()->role_id;
-        $assigned_vehicle = Vehicle::where('driver_id', $driver_id)->first()->vehicle_id;
+        $driver = Driver::where('user_id', $request->user()->id)->first();
+        $driver_id = $driver ? $driver->driver_id : null;
+        $assigned_vehicle = $driver_id ? Vehicle::where('driver_id', $driver_id)->first()?->vehicle_id : null;
 
         $assigned_dispatches = Dispatch::where("vehicle_id", $assigned_vehicle)->pluck("reservation_id");
 

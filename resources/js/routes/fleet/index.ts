@@ -1,5 +1,6 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 import maintenance from './maintenance'
+import spareParts from './spare-parts'
 import telematics from './telematics'
 import fuel from './fuel'
 /**
@@ -318,6 +319,7 @@ update.patch = (args: { vehicle_id: string | number } | [vehicle_id: string | nu
     update.form = updateForm
 const fleet = {
     maintenance: Object.assign(maintenance, maintenance),
+spareParts: Object.assign(spareParts, spareParts),
 telematics: Object.assign(telematics, telematics),
 index: Object.assign(index, index),
 fuel: Object.assign(fuel, fuel),

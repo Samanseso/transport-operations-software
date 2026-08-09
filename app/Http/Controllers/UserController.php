@@ -110,15 +110,14 @@ class UserController extends Controller
         if (strtoupper($validated['role']) === 'DRIVER') {
             $driverId = 'DRV-' . sprintf('%04d', $user->id);
             \App\Models\Driver::firstOrCreate(
-                ['driver_id' => $driverId],
+                ['user_id' => $user->id],
                 [
-                    'name' => $user->name,
+                    'driver_id' => $driverId,
                     'contact_number' => $request->input('contact_number') ?: '09170000000',
                     'license_number' => $request->input('license_number') ?: 'N/A',
                     'status' => 'AVAILABLE',
                 ]
             );
-            $user->update(['role_id' => $driverId]);
         }
 
         SystemLog::create([

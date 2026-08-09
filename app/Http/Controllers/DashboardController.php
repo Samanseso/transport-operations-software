@@ -166,7 +166,8 @@ class DashboardController extends Controller
     private function driverDashboard(User $user): Response
     {
         $today = Carbon::today();
-        $assignedVehicle = Vehicle::with('driver')->where('driver_id', $user->role_id)->first();
+        $driver = Driver::where('user_id', $user->id)->first();
+        $assignedVehicle = $driver ? Vehicle::with('driver')->where('driver_id', $driver->driver_id)->first() : null;
 
         $reservationsQuery = Reservation::query()
             ->with(['customer', 'dispatch'])

@@ -18,6 +18,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('fleet/fuel', [FuelController::class, 'index'])->name('fleet.fuel.index');
     Route::post('fleet/fuel', [FuelController::class, 'store'])->name('fleet.fuel.store');
 
+    Route::post('fleet/spare-parts', [\App\Http\Controllers\Fleet\SparePartController::class, 'store'])->name('fleet.spare-parts.store');
+    Route::put('fleet/spare-parts/{sparePart}', [\App\Http\Controllers\Fleet\SparePartController::class, 'update'])->name('fleet.spare-parts.update');
+    Route::delete('fleet/spare-parts/{sparePart}', [\App\Http\Controllers\Fleet\SparePartController::class, 'destroy'])->name('fleet.spare-parts.destroy');
+
     Route::get('fleet/{vehicle_id}', [FleetController::class, 'show'])->name('fleet.show');
     Route::post('fleet', [FleetController::class, 'store'])->name('fleet.store');
     Route::patch('fleet/{vehicle_id}', [FleetController::class, 'update'])->name('fleet.update');

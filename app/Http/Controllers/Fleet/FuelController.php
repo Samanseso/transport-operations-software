@@ -21,7 +21,7 @@ class FuelController extends Controller
             ->get();
 
         $vehicles = Vehicle::with('driver')->get();
-        $drivers = Driver::all();
+        $drivers = Driver::with('user')->get()->sortBy('name')->values();
 
         $stats = [
             'total_liters' => $fuelLogs->sum('liters'),

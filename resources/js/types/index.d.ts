@@ -47,7 +47,6 @@ export interface User {
     email: string;
     avatar?: string;
     role: string;
-    role_id: string;
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
