@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\FleetController::index
- * @see app/Http/Controllers/FleetController.php:16
+ * @see app/Http/Controllers/FleetController.php:17
  * @route '/fleet/overview'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\FleetController::index
- * @see app/Http/Controllers/FleetController.php:16
+ * @see app/Http/Controllers/FleetController.php:17
  * @route '/fleet/overview'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\FleetController::index
- * @see app/Http/Controllers/FleetController.php:16
+ * @see app/Http/Controllers/FleetController.php:17
  * @route '/fleet/overview'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\FleetController::index
- * @see app/Http/Controllers/FleetController.php:16
+ * @see app/Http/Controllers/FleetController.php:17
  * @route '/fleet/overview'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\FleetController::index
- * @see app/Http/Controllers/FleetController.php:16
+ * @see app/Http/Controllers/FleetController.php:17
  * @route '/fleet/overview'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\FleetController::index
- * @see app/Http/Controllers/FleetController.php:16
+ * @see app/Http/Controllers/FleetController.php:17
  * @route '/fleet/overview'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\FleetController::index
- * @see app/Http/Controllers/FleetController.php:16
+ * @see app/Http/Controllers/FleetController.php:17
  * @route '/fleet/overview'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -176,7 +176,7 @@ show.head = (args: { vehicle_id: string | number } | [vehicle_id: string | numbe
     show.form = showForm
 /**
 * @see \App\Http\Controllers\FleetController::store
- * @see app/Http/Controllers/FleetController.php:58
+ * @see app/Http/Controllers/FleetController.php:56
  * @route '/fleet'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\FleetController::store
- * @see app/Http/Controllers/FleetController.php:58
+ * @see app/Http/Controllers/FleetController.php:56
  * @route '/fleet'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -200,7 +200,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\FleetController::store
- * @see app/Http/Controllers/FleetController.php:58
+ * @see app/Http/Controllers/FleetController.php:56
  * @route '/fleet'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -210,7 +210,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\FleetController::store
- * @see app/Http/Controllers/FleetController.php:58
+ * @see app/Http/Controllers/FleetController.php:56
  * @route '/fleet'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -220,7 +220,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\FleetController::store
- * @see app/Http/Controllers/FleetController.php:58
+ * @see app/Http/Controllers/FleetController.php:56
  * @route '/fleet'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -229,6 +229,90 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
         })
     
     store.form = storeForm
-const FleetController = { index, show, store }
+/**
+* @see \App\Http\Controllers\FleetController::update
+ * @see app/Http/Controllers/FleetController.php:102
+ * @route '/fleet/{vehicle_id}'
+ */
+export const update = (args: { vehicle_id: string | number } | [vehicle_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: update.url(args, options),
+    method: 'patch',
+})
+
+update.definition = {
+    methods: ["patch"],
+    url: '/fleet/{vehicle_id}',
+} satisfies RouteDefinition<["patch"]>
+
+/**
+* @see \App\Http\Controllers\FleetController::update
+ * @see app/Http/Controllers/FleetController.php:102
+ * @route '/fleet/{vehicle_id}'
+ */
+update.url = (args: { vehicle_id: string | number } | [vehicle_id: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { vehicle_id: args }
+    }
+
+    
+    if (Array.isArray(args)) {
+        args = {
+                    vehicle_id: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        vehicle_id: args.vehicle_id,
+                }
+
+    return update.definition.url
+            .replace('{vehicle_id}', parsedArgs.vehicle_id.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\FleetController::update
+ * @see app/Http/Controllers/FleetController.php:102
+ * @route '/fleet/{vehicle_id}'
+ */
+update.patch = (args: { vehicle_id: string | number } | [vehicle_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+    url: update.url(args, options),
+    method: 'patch',
+})
+
+    /**
+* @see \App\Http\Controllers\FleetController::update
+ * @see app/Http/Controllers/FleetController.php:102
+ * @route '/fleet/{vehicle_id}'
+ */
+    const updateForm = (args: { vehicle_id: string | number } | [vehicle_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: update.url(args, {
+                    [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                        _method: 'PATCH',
+                        ...(options?.query ?? options?.mergeQuery ?? {}),
+                    }
+                }),
+        method: 'post',
+    })
+
+            /**
+* @see \App\Http\Controllers\FleetController::update
+ * @see app/Http/Controllers/FleetController.php:102
+ * @route '/fleet/{vehicle_id}'
+ */
+        updateForm.patch = (args: { vehicle_id: string | number } | [vehicle_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: update.url(args, {
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'PATCH',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'post',
+        })
+    
+    update.form = updateForm
+const FleetController = { index, show, store, update }
 
 export default FleetController

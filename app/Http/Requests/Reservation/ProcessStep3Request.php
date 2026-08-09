@@ -17,8 +17,15 @@ class ProcessStep3Request extends FormRequest
     public function rules(): array
     {
         return [
-            'dropoff_address' => ['required', 'string', 'max:255'],
-            'dropoff_latlng' => ['required', 'string', 'max:150'],
+            'customer_id' => ['required', 'string', 'max:255'],
+            'service_type' => ['required', 'string', 'max:150'],
+            'special_instructions' => ['nullable', 'string', 'max:500'],
+            'waypoints' => ['required', 'array', 'min:1'],
+            'waypoints.*.address' => ['required', 'string', 'max:500'],
+            'waypoints.*.latlng' => ['required', 'string', 'max:100'],
+            'waypoints.*.consignee_name' => ['nullable', 'string', 'max:150'],
+            'waypoints.*.consignee_phone' => ['nullable', 'string', 'max:50'],
+            'waypoints.*.instructions' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

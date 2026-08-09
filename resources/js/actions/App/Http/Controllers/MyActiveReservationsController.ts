@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\MyActiveReservationsController::show
- * @see app/Http/Controllers/MyActiveReservationsController.php:51
+ * @see app/Http/Controllers/MyActiveReservationsController.php:54
  * @route '/my-active-reservations/{selectedReservation}'
  */
 export const show = (args: { selectedReservation: string | number } | [selectedReservation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\MyActiveReservationsController::show
- * @see app/Http/Controllers/MyActiveReservationsController.php:51
+ * @see app/Http/Controllers/MyActiveReservationsController.php:54
  * @route '/my-active-reservations/{selectedReservation}'
  */
 show.url = (args: { selectedReservation: string | number } | [selectedReservation: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -122,7 +122,7 @@ show.url = (args: { selectedReservation: string | number } | [selectedReservatio
 
 /**
 * @see \App\Http\Controllers\MyActiveReservationsController::show
- * @see app/Http/Controllers/MyActiveReservationsController.php:51
+ * @see app/Http/Controllers/MyActiveReservationsController.php:54
  * @route '/my-active-reservations/{selectedReservation}'
  */
 show.get = (args: { selectedReservation: string | number } | [selectedReservation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -131,7 +131,7 @@ show.get = (args: { selectedReservation: string | number } | [selectedReservatio
 })
 /**
 * @see \App\Http\Controllers\MyActiveReservationsController::show
- * @see app/Http/Controllers/MyActiveReservationsController.php:51
+ * @see app/Http/Controllers/MyActiveReservationsController.php:54
  * @route '/my-active-reservations/{selectedReservation}'
  */
 show.head = (args: { selectedReservation: string | number } | [selectedReservation: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -141,7 +141,7 @@ show.head = (args: { selectedReservation: string | number } | [selectedReservati
 
     /**
 * @see \App\Http\Controllers\MyActiveReservationsController::show
- * @see app/Http/Controllers/MyActiveReservationsController.php:51
+ * @see app/Http/Controllers/MyActiveReservationsController.php:54
  * @route '/my-active-reservations/{selectedReservation}'
  */
     const showForm = (args: { selectedReservation: string | number } | [selectedReservation: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -151,7 +151,7 @@ show.head = (args: { selectedReservation: string | number } | [selectedReservati
 
             /**
 * @see \App\Http\Controllers\MyActiveReservationsController::show
- * @see app/Http/Controllers/MyActiveReservationsController.php:51
+ * @see app/Http/Controllers/MyActiveReservationsController.php:54
  * @route '/my-active-reservations/{selectedReservation}'
  */
         showForm.get = (args: { selectedReservation: string | number } | [selectedReservation: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ show.head = (args: { selectedReservation: string | number } | [selectedReservati
         })
             /**
 * @see \App\Http\Controllers\MyActiveReservationsController::show
- * @see app/Http/Controllers/MyActiveReservationsController.php:51
+ * @see app/Http/Controllers/MyActiveReservationsController.php:54
  * @route '/my-active-reservations/{selectedReservation}'
  */
         showForm.head = (args: { selectedReservation: string | number } | [selectedReservation: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

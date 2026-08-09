@@ -112,8 +112,8 @@ class DashboardController extends Controller
         $reservationTotals = [
             'total' => Reservation::count(),
             'today' => Reservation::whereDate('created_at', $today)->count(),
-            'active' => Reservation::whereIn('status', ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING'])->count(),
-            'completed' => Reservation::where('status', 'COMPLETE')->count(),
+            'active' => Reservation::whereIn('status', Reservation::getActiveStatuses())->count(),
+            'completed' => Reservation::whereIn('status', ['DELIVERED', 'COMPLETE', 'COMPLETED'])->count(),
         ];
 
         $fleetTotals = [
@@ -129,6 +129,17 @@ class DashboardController extends Controller
             'admins' => User::where('role', 'ADMINISTRATOR')->count(),
             'drivers_without_vehicle' => Driver::doesntHave('vehicle')->count(),
         ];
+
+        $activeDispatches = Reservation::query()
+            ->with([
+                'customer',
+                'dispatch',
+                'dispatch.vehicle',
+                'dispatch.vehicle.driver',
+            ])
+            ->whereIn('status', Reservation::getActiveStatuses())
+            ->latest()
+            ->get();
 
         return Inertia::render('admin/dashboard', [
             'metrics' => [
@@ -148,6 +159,7 @@ class DashboardController extends Controller
             ],
             'upcomingDispatches' => $upcomingDispatches,
             'recentLogs' => $recentLogs,
+            'activeDispatches' => $activeDispatches,
         ]);
     }
 
@@ -200,9 +212,9 @@ class DashboardController extends Controller
                 ] : null,
                 'total_tasks' => (clone $reservationsQuery)->count(),
                 'active_tasks' => (clone $reservationsQuery)
-                    ->whereIn('status', ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING'])
+                    ->whereIn('status', Reservation::getActiveStatuses())
                     ->count(),
-                'completed_tasks' => (clone $reservationsQuery)->where('status', 'COMPLETE')->count(),
+                'completed_tasks' => (clone $reservationsQuery)->whereIn('status', ['DELIVERED', 'COMPLETE', 'COMPLETED'])->count(),
                 'today_tasks' => (clone $reservationsQuery)
                     ->whereHas('dispatch', fn ($query) => $query->whereDate('schedule', $today))
                     ->count(),
@@ -247,9 +259,9 @@ class DashboardController extends Controller
             'metrics' => [
                 'total_reservations' => (clone $reservationsQuery)->count(),
                 'active_reservations' => (clone $reservationsQuery)
-                    ->whereIn('status', ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING'])
+                    ->whereIn('status', Reservation::getActiveStatuses())
                     ->count(),
-                'completed_reservations' => (clone $reservationsQuery)->where('status', 'COMPLETE')->count(),
+                'completed_reservations' => (clone $reservationsQuery)->whereIn('status', ['DELIVERED', 'COMPLETE', 'COMPLETED'])->count(),
                 'new_this_month' => (clone $reservationsQuery)->where('created_at', '>=', $today->copy()->startOfMonth())->count(),
             ],
             'breakdowns' => [

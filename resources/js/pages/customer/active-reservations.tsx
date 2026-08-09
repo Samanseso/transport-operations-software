@@ -8,6 +8,7 @@ import { index } from '@/routes/my-active-reservations';
 import { BreadcrumbItem, Reservation, SharedData } from '@/types';
 import { router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import { Navigation, Compass } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -52,18 +53,23 @@ const ActiveReservations = () => {
     return (
         <SidebarProvider defaultOpen={isOpen}>
             <AppLayout breadcrumbs={breadcrumbs}>
-                <div className="flex flex-row">
-                    <div className="flex-1 p-4 pt-4.5">
-                        <p className="mb-4 text-sm font-bold">Active reservations ({props.reservations.length})</p>
-                        <div className="mb-3">
+                <div className="flex flex-row h-[calc(100vh-65px)] overflow-hidden">
+                    <div className="w-[340px] flex-col p-4 border-r border-slate-200/80 bg-white dark:border-slate-800 dark:bg-slate-900 overflow-y-auto space-y-4 shrink-0">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+                                <Compass className="h-4 w-4 text-sky-500" />
+                                Active Reservations ({props.reservations.length})
+                            </h2>
+                        </div>
+                        <div>
                             <SearchBar
                                 value={searchInput}
                                 onChange={setSearchInput}
-                                placeholder="Search reservation, driver, vehicle, location"
+                                placeholder="Search waybill, driver, location..."
                             />
                         </div>
 
-                        <div>
+                        <div className="space-y-2">
                             {props.reservations.length > 0 ? (
                                 props.reservations.map((reservation) => (
                                     <ActiveDisptach
@@ -74,13 +80,13 @@ const ActiveReservations = () => {
                                     />
                                 ))
                             ) : (
-                                <div className="rounded-md border border-dashed px-4 py-6 text-sm text-gray-500">
+                                <div className="rounded-xl border border-dashed border-slate-200 p-6 text-center text-xs text-slate-400 dark:border-slate-800">
                                     No active reservations match your search.
                                 </div>
                             )}
                         </div>
                     </div>
-                    <div className="flex-3 relative overflow-hidden rounded-s-md" style={{ height: 'calc(100vh - 85px)', width: '100%' }}>
+                    <div className="flex-1 relative overflow-hidden bg-slate-950">
                         {selectedReservation && <FloatingReservationDetails reservation={selectedReservation} />}
                         {selectedReservation && <MapRoute reservation={selectedReservation} padding={50} />}
                     </div>

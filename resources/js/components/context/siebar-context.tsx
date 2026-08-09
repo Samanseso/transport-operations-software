@@ -1,7 +1,8 @@
+import { createContext, useContext } from 'react';
 import { dashboard } from '@/routes';
 import { ModalType, SidebarNavItems } from '@/types';
 import { LayoutGrid, Bell, User, CalendarDays, MapPin, Truck, Route, Mail, Folder, BookOpen } from 'lucide-react';
-import React, { createContext, useState, useContext, SetStateAction } from 'react';
+import { navItems } from '@/components/ui/sidebar';
 import { NavItem } from '../../types/index';
 
 

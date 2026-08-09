@@ -4,7 +4,7 @@ import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { ModalType, type NavItem } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
-import { Truck, MapPin, MapPinned, ClipboardPen, NotepadText } from 'lucide-react';
+import { Truck, MapPin, ClipboardPen, NotepadText } from 'lucide-react';
 import { useEffect, type PropsWithChildren } from 'react';
 
 import { useNewReservation } from '@/components/context/new-reservation-context';
@@ -46,32 +46,26 @@ export default function CreateReservationLayout({ children }: PropsWithChildren<
 
     const sidebarNavItems: NavItem[] = [
         {
-            title: 'Date & Vehicle',
+            title: '1. Route & Stops',
             href: stepHref("1"),
-            icon: Truck,
-            roles: ["all"]
-        },
-        {
-            title: ' Pick-up',
-            href: stepHref("2"),
             icon: MapPin,
             roles: ["all"]
         },
         {
-            title: 'Drop-off',
-            href: stepHref("3"),
-            icon: MapPinned,
+            title: '2. Cargo & Fleet',
+            href: stepHref("2"),
+            icon: Truck,
             roles: ["all"]
         },
         {
-            title: 'Details',
-            href: stepHref("4"),
+            title: '3. Consignee Contacts',
+            href: stepHref("3"),
             icon: ClipboardPen,
             roles: ["all"]
         },
         {
-            title: 'Summary',
-            href: stepHref("5"),
+            title: '4. Summary & Waybill',
+            href: stepHref("4"),
             icon: NotepadText,
             roles: ["all"]
         },

@@ -303,6 +303,78 @@ updateStatus.post = (args: { reservation_id: string | number } | [reservation_id
         })
     
     updateStatus.form = updateStatusForm
-const TaskController = { index, show, update, updateStatus }
+/**
+* @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
+ * @see app/Http/Controllers/Driver/TaskController.php:121
+ * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
+ */
+export const updateWaypointPod = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: updateWaypointPod.url(args, options),
+    method: 'post',
+})
+
+updateWaypointPod.definition = {
+    methods: ["post"],
+    url: '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
+ * @see app/Http/Controllers/Driver/TaskController.php:121
+ * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
+ */
+updateWaypointPod.url = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions) => {
+    if (Array.isArray(args)) {
+        args = {
+                    reservation_id: args[0],
+                    waypoint_index: args[1],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        reservation_id: args.reservation_id,
+                                waypoint_index: args.waypoint_index,
+                }
+
+    return updateWaypointPod.definition.url
+            .replace('{reservation_id}', parsedArgs.reservation_id.toString())
+            .replace('{waypoint_index}', parsedArgs.waypoint_index.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
+ * @see app/Http/Controllers/Driver/TaskController.php:121
+ * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
+ */
+updateWaypointPod.post = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: updateWaypointPod.url(args, options),
+    method: 'post',
+})
+
+    /**
+* @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
+ * @see app/Http/Controllers/Driver/TaskController.php:121
+ * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
+ */
+    const updateWaypointPodForm = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        action: updateWaypointPod.url(args, options),
+        method: 'post',
+    })
+
+            /**
+* @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
+ * @see app/Http/Controllers/Driver/TaskController.php:121
+ * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
+ */
+        updateWaypointPodForm.post = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+            action: updateWaypointPod.url(args, options),
+            method: 'post',
+        })
+    
+    updateWaypointPod.form = updateWaypointPodForm
+const TaskController = { index, show, update, updateStatus, updateWaypointPod }
 
 export default TaskController

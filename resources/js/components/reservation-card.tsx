@@ -45,8 +45,11 @@ const ReservationCard = ({ reservation, updateTable }: ReservationCardProps) => 
         <div className="mb-2 cursor-pointer rounded-sm bg-gray-100 py-3">
             <div className="px-3">
                 <div className="mb-1 flex items-center justify-between">
-                    <div className="flex gap-2">
-                        <p className="font-bold">{reservation.customer.name}</p>
+                    <div className="flex items-center gap-2">
+                        <span className="rounded bg-black px-2 py-0.5 font-mono text-[11px] font-bold text-white shadow-sm">
+                            {reservation.waybill_number || `WAYBILL-${reservation.reservation_id.slice(0, 6).toUpperCase()}`}
+                        </span>
+                        <p className="font-bold">{reservation.customer?.name || 'Customer'}</p>
                         <StatusTag text={reservation.status} />
                     </div>
 

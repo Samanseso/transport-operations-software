@@ -13,33 +13,31 @@ export function Modal ({ content }: ModalProps) {
     const [open, setOpen] = useState(content?.open ?? false);
 
     useEffect(() => {
-        setOpen(content?.open ?? false);
-    }, [content?.open]);
+        setOpen(Boolean(content?.open && content?.status));
+    }, [content]);
 
     const { createModal } = useModal();
 
-    const onModalClose = (open: boolean) => {
-        if (!open) {
-            createModal(undefined)
-            setOpen(false)
+    const onModalClose = (isOpen: boolean) => {
+        if (!isOpen) {
+            createModal(undefined);
+            setOpen(false);
         }
-    }
+    };
 
     return (
-        <Dialog open={open} onOpenChange={open => onModalClose(open)} modal={true}>
+        <Dialog open={open} onOpenChange={onModalClose} modal={true}>
             <DialogContent>
                 <DialogTitle>{content?.title}</DialogTitle>
                 <DialogDescription>
                    {content?.message}
                 </DialogDescription>
-                    <DialogFooter className="gap-2">
-                        <DialogClose asChild>
-                            <Button variant="default" onClick={() => onModalClose(false)} asChild>
-                                <button>Okay</button>
-                            </Button>
-                        </DialogClose>
-                    </DialogFooter>
+                <DialogFooter className="gap-2">
+                    <Button type="button" variant="default" onClick={() => onModalClose(false)}>
+                        Okay
+                    </Button>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }

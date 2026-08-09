@@ -16,8 +16,11 @@ class ProcessStep1Request extends FormRequest
     public function rules(): array
     {
         return [
-            'vehicle_id' => ['required', 'string', 'max:20', Rule::exists('vehicles', 'vehicle_id')],
-            'date' => ['required', 'date_format:Y-m-d', 'after:today'],
+            'pickup_address' => ['required', 'string', 'max:500'],
+            'pickup_latlng' => ['required', 'string', 'max:100'],
+            'waypoints' => ['required', 'array', 'min:1'],
+            'waypoints.*.address' => ['required', 'string', 'max:500'],
+            'waypoints.*.latlng' => ['required', 'string', 'max:100'],
         ];
     }
 }

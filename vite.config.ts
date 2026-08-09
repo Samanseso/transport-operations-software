@@ -28,7 +28,7 @@ export default defineConfig({
             ignored: ['**/storage/framework/views/**'],
         },
         hmr: {
-            host: '192.168.8.136',
+            host: '192.168.100.3',
             port: 5173,
         },
     },

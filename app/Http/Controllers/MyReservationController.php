@@ -32,19 +32,32 @@ class MyReservationController extends Controller
 
     public function index(Request $request)
     {
+        $user = $request->user();
         return Inertia::render('customer/my-reservations', [
-            'reservations' => Reservation::with(['customer', 'dispatch'])->where('customer_id', $request->user()->id)->orderBy('created_at', 'desc')->paginate(10)->withQueryString(),
+            'reservations' => Reservation::with(['customer', 'dispatch'])
+                ->where(function ($query) use ($user) {
+                    $query->where('customer_id', (string) $user->id)
+                        ->orWhere('email', $user->email);
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        $user = $request->user();
         $reservation = Reservation::with([
             'customer',
             'dispatch',
             'dispatch.vehicle.driver',
-        ])->where('reservation_id', $id)->firstOrFail();
-        
+        ])->where('reservation_id', $id)
+        ->where(function ($query) use ($user) {
+            $query->where('customer_id', (string) $user->id)
+                ->orWhere('email', $user->email);
+        })->firstOrFail();
+
         return Inertia::render("admin/reservation-details", [
             'reservation' => $reservation,
         ]);

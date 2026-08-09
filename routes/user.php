@@ -5,7 +5,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'role:ADMINISTRATOR,DISPATCHER'])->group(function () {
 
     Route::redirect('users', 'users/customer');
 
@@ -14,7 +14,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('users/admin', [UserController::class, 'admin'])->name('user.admin');
 
     Route::get('users/{user}', [UserController::class, 'show'])->name('user.show');
-
 
     Route::post('users/create', [UserController::class, 'create'])->name('users.create');
     Route::patch('users/update/{user}', [UserController::class, 'update'])->name('users.update');

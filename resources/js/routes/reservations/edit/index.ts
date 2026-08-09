@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\ReservationController::step
- * @see app/Http/Controllers/ReservationController.php:271
+ * @see app/Http/Controllers/ReservationController.php:266
  * @route '/reservations/{reservation_id}/edit/step/{step}'
  */
 export const step = (args: { reservation_id: string | number, step: string | number } | [reservation_id: string | number, step: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ step.definition = {
 
 /**
 * @see \App\Http\Controllers\ReservationController::step
- * @see app/Http/Controllers/ReservationController.php:271
+ * @see app/Http/Controllers/ReservationController.php:266
  * @route '/reservations/{reservation_id}/edit/step/{step}'
  */
 step.url = (args: { reservation_id: string | number, step: string | number } | [reservation_id: string | number, step: string | number ], options?: RouteQueryOptions) => {
@@ -42,7 +42,7 @@ step.url = (args: { reservation_id: string | number, step: string | number } | [
 
 /**
 * @see \App\Http\Controllers\ReservationController::step
- * @see app/Http/Controllers/ReservationController.php:271
+ * @see app/Http/Controllers/ReservationController.php:266
  * @route '/reservations/{reservation_id}/edit/step/{step}'
  */
 step.get = (args: { reservation_id: string | number, step: string | number } | [reservation_id: string | number, step: string | number ], options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -51,7 +51,7 @@ step.get = (args: { reservation_id: string | number, step: string | number } | [
 })
 /**
 * @see \App\Http\Controllers\ReservationController::step
- * @see app/Http/Controllers/ReservationController.php:271
+ * @see app/Http/Controllers/ReservationController.php:266
  * @route '/reservations/{reservation_id}/edit/step/{step}'
  */
 step.head = (args: { reservation_id: string | number, step: string | number } | [reservation_id: string | number, step: string | number ], options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -61,7 +61,7 @@ step.head = (args: { reservation_id: string | number, step: string | number } | 
 
     /**
 * @see \App\Http\Controllers\ReservationController::step
- * @see app/Http/Controllers/ReservationController.php:271
+ * @see app/Http/Controllers/ReservationController.php:266
  * @route '/reservations/{reservation_id}/edit/step/{step}'
  */
     const stepForm = (args: { reservation_id: string | number, step: string | number } | [reservation_id: string | number, step: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -71,7 +71,7 @@ step.head = (args: { reservation_id: string | number, step: string | number } | 
 
             /**
 * @see \App\Http\Controllers\ReservationController::step
- * @see app/Http/Controllers/ReservationController.php:271
+ * @see app/Http/Controllers/ReservationController.php:266
  * @route '/reservations/{reservation_id}/edit/step/{step}'
  */
         stepForm.get = (args: { reservation_id: string | number, step: string | number } | [reservation_id: string | number, step: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -80,7 +80,7 @@ step.head = (args: { reservation_id: string | number, step: string | number } | 
         })
             /**
 * @see \App\Http\Controllers\ReservationController::step
- * @see app/Http/Controllers/ReservationController.php:271
+ * @see app/Http/Controllers/ReservationController.php:266
  * @route '/reservations/{reservation_id}/edit/step/{step}'
  */
         stepForm.head = (args: { reservation_id: string | number, step: string | number } | [reservation_id: string | number, step: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

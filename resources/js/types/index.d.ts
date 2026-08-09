@@ -37,6 +37,10 @@ export interface SharedData {
     [key: string]: unknown;
 }
 
+export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: Auth;
+};
+
 export interface User {
     id: number;
     name: string;
@@ -47,31 +51,6 @@ export interface User {
     created_at: string;
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
-}
-
-export interface Announcement {
-    announcement_id: string;
-    title: string;
-    summary: string;
-    description: string;
-    starts_at: string | null;
-    ends_at: string | null;
-    starts_at_input?: string | null;
-    ends_at_input?: string | null;
-    venue: string;
-    organizer: string | null;
-    audience: string;
-    status: string;
-    capacity: number | null;
-    registration_link: string | null;
-    contact_name: string | null;
-    contact_email: string | null;
-    is_featured: boolean;
-    published_at: string | null;
-    created_at: string | null;
-    updated_at: string | null;
-    creator_name?: string | null;
-    updater_name?: string | null;
 }
 
 export interface PaginationType<T> {
@@ -112,6 +91,8 @@ export interface Vehicle {
     model: string;
     capacity: string;
     status: string;
+    latitude?: number | string;
+    longitude?: number | string;
     created_at: string;
     updated_at: string;
 }
@@ -172,17 +153,32 @@ export interface GeocodeHit {
 
 export interface Reservation {
     reservation_id: string;
+    waybill_number?: string | null;
+    customer_id?: string;
+    customer_name?: string;
     customer: User;
     status: string;
     pickup_address: string;
     pickup_latlng: string;
     dropoff_address: string;
     dropoff_latlng: string;
+    waypoints?: any[];
     date: string;
     time: string;
     service_type: string;
     cargo_details: string;
+    cargo_type?: string | null;
+    cargo_weight_kg?: number;
+    max_capacity_kg?: number;
     special_instructions: string;
+    total_fare_cents?: number;
+    base_rate_applied_cents?: number;
+    per_km_rate_applied_cents?: number;
+    per_min_rate_applied_cents?: number;
+    pod_signature_url?: string | null;
+    pod_photo_url?: string | null;
+    pod_recipient_name?: string | null;
+    pod_signed_at?: string | null;
     created_at: string;
     updated_at: string;
     dispatch: Dispatch;
@@ -213,8 +209,12 @@ export interface Vehicle {
     driver_id: string | null;
     driver?: Driver | null;
     plate_number: string;
+    vin_number?: string | null;
     model: string;
     capacity: string;
+    registration_expires_at?: string | null;
+    insurance_expires_at?: string | null;
+    last_serviced_odometer?: number;
     status: string;
     created_at: string;
     updated_at: string;
@@ -234,3 +234,87 @@ export interface SystemLogEntry {
     performed_to: string;
     description: string;
 }
+
+export interface MaintenanceLog {
+    maintenance_id: string;
+    vehicle_id: string;
+    vehicle?: Vehicle;
+    service_type: string;
+    odometer_reading: number;
+    cost: number | string;
+    service_center: string | null;
+    status: string;
+    scheduled_at: string | null;
+    completed_at: string | null;
+    notes?: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface FuelLog {
+    fuel_log_id: string;
+    vehicle_id: string;
+    vehicle?: Vehicle;
+    driver_id: string | null;
+    driver?: Driver | null;
+    liters: number | string;
+    total_cost: number | string;
+    odometer_reading: number;
+    efficiency_km_l?: number | null;
+    is_anomaly?: boolean;
+    receipt_image_url?: string | null;
+    filled_at: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Pricing {
+    pricing_id: string;
+    service_type: string;
+    base_rate: string;
+    distance_rate: string;
+    travel_time_rate: string;
+}
+
+export interface Payment {
+    reservation_id: string;
+    reservation?: Reservation;
+    distance: string;
+    travel_time: string;
+    total_amount: string;
+    payment_method: string;
+    reference_number: string;
+    paid_at: string;
+}
+
+export interface VehicleInspection {
+    inspection_id: string;
+    vehicle_id: string;
+    vehicle?: Vehicle;
+    driver_id: string;
+    driver?: Driver;
+    tires_ok: boolean;
+    brakes_ok: boolean;
+    lights_ok: boolean;
+    fuel_level: string;
+    odometer_reading: number;
+    defects_noted?: string | null;
+    photo_url?: string | null;
+    inspected_at: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface DriverExpense {
+    expense_id: string;
+    driver_id: string;
+    driver?: Driver;
+    category: string;
+    amount: number | string;
+    description?: string | null;
+    receipt_url?: string | null;
+    status: string;
+    created_at: string;
+    updated_at: string;
+}
+

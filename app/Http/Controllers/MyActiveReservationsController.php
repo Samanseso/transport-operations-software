@@ -16,8 +16,11 @@ class MyActiveReservationsController extends Controller
             'dispatch.vehicle',
             'dispatch.vehicle.driver',
         ])
-            ->where('customer_id', $request->user()->id)
-            ->whereIn('status', ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING']);
+            ->where(function ($cq) use ($request) {
+                $cq->where('customer_id', (string) $request->user()->id)
+                    ->orWhere('email', $request->user()->email);
+            })
+            ->whereIn('status', Reservation::getActiveStatuses());
 
         $search = trim((string) $request->query('q', ''));
 
@@ -56,8 +59,11 @@ class MyActiveReservationsController extends Controller
             'dispatch.vehicle',
             'dispatch.vehicle.driver',
         ])
-            ->where('customer_id', $request->user()->id)
-            ->whereIn('status', ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING']);
+            ->where(function ($cq) use ($request) {
+                $cq->where('customer_id', (string) $request->user()->id)
+                    ->orWhere('email', $request->user()->email);
+            })
+            ->whereIn('status', Reservation::getActiveStatuses());
 
         $search = trim((string) $request->query('q', ''));
 

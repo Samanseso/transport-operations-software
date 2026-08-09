@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Settings\PasswordController;
+use App\Http\Controllers\Settings\PricingController;
 use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,4 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('settings/appearance', function () {
         return Inertia::render('settings/appearance');
     })->name('appearance');
+
+    Route::get('settings/pricing', [PricingController::class, 'index'])->name('pricing.index');
+    Route::post('settings/pricing', [PricingController::class, 'store'])->name('pricing.store');
+    Route::put('settings/pricing/{id}', [PricingController::class, 'update'])->name('pricing.update');
 });
+

@@ -1,74 +1,49 @@
-import { Reservation } from '@/types'
-import StatusTag from './status-tag'
-import { Separator } from './ui/separator';
-import { Link, usePage } from '@inertiajs/react';
 import { show } from '@/routes/active-dispatches';
-import { useEffect, useState } from 'react';
-import { LatLng } from 'leaflet';
+import { Reservation } from '@/types';
+import { Link, usePage } from '@inertiajs/react';
+import { MapPin, Navigation } from 'lucide-react';
+import StatusTag from './status-tag';
 
+const ActiveDisptach = ({ reservation, selectedReservation, href }: { reservation: Reservation; selectedReservation: string; href?: string }) => {
+    const { props } = usePage<{ filters?: { q?: string; status?: string } }>();
 
+    const waybillNo = reservation.waybill_number || `WB-${reservation.reservation_id.slice(0, 8).toUpperCase()}`;
+    const isSelected = selectedReservation === reservation.reservation_id;
 
-const ActiveDisptach = ({
-	reservation,
-	selectedReservation,
-	href,
-}: {
-	reservation: Reservation,
-	selectedReservation: string,
-	href?: string,
-}) => {
-	const { props } = usePage<{ filters?: { q?: string; status?: string } }>();
+    return (
+        <Link
+            as="div"
+            className={`group mb-3 max-w-[320px] cursor-pointer rounded-2xl border p-4 shadow-xs transition-all duration-200 ${
+                isSelected
+                    ? 'border-l-4 border-slate-300 border-l-sky-500 bg-sky-50/80 shadow-sm dark:border-slate-700 dark:bg-sky-950/40'
+                    : 'dark:hover:bg-slate-850 border-slate-200/80 bg-white hover:border-slate-300 hover:bg-slate-50/80 dark:border-slate-800/80 dark:bg-slate-900 dark:hover:border-slate-700'
+            }`}
+            href={href ?? show(reservation.reservation_id, { query: { q: props.filters?.q, status: props.filters?.status } })}
+        >
+            <div className="space-y-2.5">
+                <div className="flex items-center justify-between">
+                    <div>
+                        <span className="font-mono text-xs font-bold text-sky-600 dark:text-sky-400">{waybillNo}</span>
+                        <p className="max-w-[180px] truncate text-xs font-semibold text-slate-800 dark:text-slate-200">
+                            {reservation.customer?.name || reservation.customer_name || 'Enterprise Client'}
+                        </p>
+                    </div>
+                    <StatusTag text={reservation.status} />
+                </div>
 
-	const startDate = new Date(reservation.dispatch.schedule);
-	const endDate = new Date(reservation.date);
+                <div className="space-y-1.5 border-t border-slate-100 pt-1 text-xs dark:border-slate-800/60">
+                    <div className="flex items-center gap-1.5 truncate text-slate-700 dark:text-slate-300">
+                        <MapPin className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+                        <span className="truncate">{reservation.pickup_address}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 truncate text-slate-500 dark:text-slate-400">
+                        <Navigation className="h-3.5 w-3.5 shrink-0 text-rose-500" />
+                        <span className="truncate">{reservation.dropoff_address}</span>
+                    </div>
+                </div>
+            </div>
+        </Link>
+    );
+};
 
-	const startLoc = reservation.pickup_address.split(',')[0] + ", " + reservation.pickup_address.split(",").at(-4) + " ";
-	const endLoc = reservation.dropoff_address.split(',')[0] + ", " + reservation.dropoff_address.split(",").at(-4);
-
-	
-
-	return (
-		<Link
-			as="div"
-			className={'bg-gray-100 rounded-sm mb-2 py-3 cursor-pointer ' + `${selectedReservation === reservation.reservation_id ? 'border-s-3 border-blue-400 bg-sky-50' : ''}`}
-			href={href ?? show(reservation.reservation_id, { query: { q: props.filters?.q, status: props.filters?.status } })}
-		>
-			<div className="px-3">
-				<div className='flex justify-between items-center mb-1'>
-					<p className='text-sm'>ID <span className='id-code-font'>{
-						reservation.reservation_id.split('-')[0] + "-" +
-						reservation.reservation_id.split('-')[1] +
-						"..."
-					}</span>
-					</p>
-					<StatusTag text={reservation.status} />
-				</div>
-
-
-				<p className='text-xs text-gray-500 mb-2'>{reservation.service_type}</p>
-
-
-
-
-				<div className='flex flex-row gap-2'>
-					<div className='w-8 flex flex-col gap-2'>
-						<p className='text-xs text-gray-500 text-nowrap'>{startDate.toLocaleString('default', { month: 'short' })} {startDate.getDate()}</p>
-						<p className='text-xs text-gray-500 text-nowrap'>{endDate.toLocaleString('default', { month: 'short' })} {endDate.getDate()}</p>
-					</div>
-					<div className="timeline">	
-						<div className="dot"></div>
-						<div className="line"></div>
-						<div className="dot"></div>
-					</div>
-
-					<div className='flex flex-col gap-2 w-60'>
-						<p className='text-xs truncate'>{startLoc}</p>
-						<p className='text-xs truncate'>{endLoc}</p>
-					</div>
-				</div>
-			</div>
-		</Link>
-	)
-}
-
-export default ActiveDisptach
+export default ActiveDisptach;

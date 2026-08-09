@@ -9,23 +9,32 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 
-import { User, KeyRound, Palette } from 'lucide-react';
+import { User, KeyRound, Palette, DollarSign } from 'lucide-react';
 
 const sidebarNavItems: NavItem[] = [
     {
         title: 'Profile',
         href: edit(),
         icon: User,
+        roles: ['ADMINISTRATOR', 'DISPATCHER', 'DRIVER', 'CUSTOMER'],
     },
     {
         title: 'Password',
         href: editPassword(),
         icon: KeyRound,
+        roles: ['ADMINISTRATOR', 'DISPATCHER', 'DRIVER', 'CUSTOMER'],
     },
     {
         title: 'Appearance',
         href: appearance(),
         icon: Palette,
+        roles: ['ADMINISTRATOR', 'DISPATCHER', 'DRIVER', 'CUSTOMER'],
+    },
+    {
+        title: 'Pricing Rates',
+        href: '/settings/pricing',
+        icon: DollarSign,
+        roles: ['ADMINISTRATOR'],
     },
 ];
 

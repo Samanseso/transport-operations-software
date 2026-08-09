@@ -238,7 +238,6 @@ class ReservationController extends Controller
 
     public function step(Request $request, $step)
     {
-
         if ((int)$step > 1 && (int)$step > session('current_step')) {
             return redirect()
                 ->route('reservations.step', ['step' => session('current_step') ?? 1])
@@ -247,22 +246,18 @@ class ReservationController extends Controller
                     'modal_action' => "create",
                     'modal_title' => "Invalid action!",
                     'modal_message' => "Please finish previous steps first.",
-                ]);;
-        };
-
-
+                ]);
+        }
 
         switch ($step) {
             case 1:
-                return $this->renderStep1($request, $request->query('date') ?? $this->minimumReservationDate());
+                return $this->renderStep1($request);
             case 2:
-                return $this->renderStep2();
+                return $this->renderStep2($request, $request->query('date') ?? (session('date') ?? $this->minimumReservationDate()));
             case 3:
-                return $this->renderStep3();
+                return $this->renderStep3($request);
             case 4:
                 return $this->renderStep4($request);
-            case 5:
-                return $this->renderStep5($request);
             default:
                 return redirect()->route('reservations.step', ['step' => 1]);
         }
@@ -283,137 +278,149 @@ class ReservationController extends Controller
                     'modal_title' => "Invalid action!",
                     'modal_message' => "Please finish previous steps first.",
                 ]);
-        };
+        }
 
         switch ($step) {
             case 1:
-                return $this->renderStep1($request, $request->query('date') ?? (session('date') ?? $this->minimumReservationDate()));
+                return $this->renderStep1($request);
             case 2:
-                return $this->renderStep2();
+                return $this->renderStep2($request, $request->query('date') ?? (session('date') ?? $this->minimumReservationDate()));
             case 3:
-                return $this->renderStep3();
+                return $this->renderStep3($request);
             case 4:
                 return $this->renderStep4($request);
-            case 5:
-                return $this->renderStep5($request);
             default:
                 return redirect()->route('reservations.edit.step', ['reservation_id' => $reservation_id, 'step' => 1]);
         }
     }
 
-    public function renderStep1(Request $request, $date)
+    public function renderStep1(Request $request)
+    {
+        return Inertia::render('admin/new-reservation/route-planning', [
+            'pickup_address' => session('pickup_address', 'Metro Manila Port Area, Manila'),
+            'pickup_latlng'  => session('pickup_latlng', '14.5885,120.9691'),
+            'waypoints'      => session('waypoints', [
+                [
+                    'address'         => 'Novaliches Logistics Hub, Quezon City',
+                    'latlng'          => '14.7000,121.0333',
+                    'consignee_name'  => 'Juan Dela Cruz',
+                    'consignee_phone' => '09171234567',
+                    'instructions'    => 'Gate 2 Loading Dock',
+                ],
+            ]),
+            'edit_mode'             => session()->has('edit_reservation_id'),
+            'edit_reservation_id'   => session('edit_reservation_id'),
+        ]);
+    }
+
+    public function renderStep2(Request $request, $date)
     {
         $parsedDate = $this->normalizeReservationDate($date);
 
-        if (! $request->query('date') && session('date')) {
-            $parsedDate = $this->normalizeReservationDate(session('date'));
-        }
+        $dispatchedVehicles = Dispatch::whereDate('schedule', $parsedDate)->pluck('vehicle_id');
 
-
-
-
-        // Get all vehicles dispatched on this date
-        $dispatchedVehicles = Dispatch::whereDate('schedule', $parsedDate)
-            ->pluck('vehicle_id');
-
-        $unavailableVehicles = Vehicle::whereIn('vehicle_id', $dispatchedVehicles)
-            ->get();
-
-        // Get vehicles that are not dispatched and are marked AVAILABLE
-        $availableVehicles = Vehicle::with('driver')->whereNotIn('vehicle_id', $dispatchedVehicles)
+        $availableVehicles = Vehicle::with('driver')
+            ->whereNotIn('vehicle_id', $dispatchedVehicles)
             ->where('status', 'AVAILABLE')
             ->get();
 
+        $unavailableVehicles = Vehicle::with('driver')
+            ->where(function ($q) use ($dispatchedVehicles) {
+                $q->whereIn('vehicle_id', $dispatchedVehicles)
+                    ->orWhereIn('status', ['IN_MAINTENANCE', 'UNSAFE_FOR_DRIVE']);
+            })
+            ->get();
 
-
-        return Inertia::render('admin/new-reservation/availability', [
-            'date' => $parsedDate,
-            'minimumDate' => $this->minimumReservationDate(),
-            'availableVehicles' => $availableVehicles,
+        return Inertia::render('admin/new-reservation/fleet-allocation', [
+            'date'                => session('date', $parsedDate),
+            'time'                => session('time', '09:00'),
+            'cargo_type'          => session('cargo_type', 'General Freight'),
+            'cargo_weight_kg'     => session('cargo_weight_kg', 100),
+            'selected_vehicle_id' => session('vehicle_id'),
+            'availableVehicles'   => $availableVehicles,
             'unavailableVehicles' => $unavailableVehicles,
-            'edit_mode' => session()->has('edit_reservation_id'),
+            'edit_mode'           => session()->has('edit_reservation_id'),
             'edit_reservation_id' => session('edit_reservation_id'),
         ]);
     }
 
-    public function renderStep2()
+    public function renderStep3(Request $request)
     {
-        return Inertia::render('admin/new-reservation/location', [
-            'location_type' => 'pickup',
-            'pickup_address' => session('pickup_address'),
-            'pickup_latlng' => session('pickup_latlng'),
-            'dropoff_address' => session('dropoff_address'),
-            'dropoff_latlng' => session('dropoff_latlng'),
-            'edit_mode' => session()->has('edit_reservation_id'),
-            'edit_reservation_id' => session('edit_reservation_id'),
-        ]);
-    }
+        $customers = User::where('role', 'CUSTOMER')
+            ->select('id', 'name', 'email')
+            ->orderBy('name')
+            ->get();
 
-    public function renderStep3()
-    {
-        return Inertia::render('admin/new-reservation/location', [
-            'location_type'     => 'dropoff',
-            'dropoff_address'   => session('dropoff_address'),
-            'dropoff_latlng'    => session('dropoff_latlng'),
-            'pickup_address' => session('pickup_address'),
-            'pickup_latlng' => session('pickup_latlng'),
-            'edit_mode' => session()->has('edit_reservation_id'),
-            'edit_reservation_id' => session('edit_reservation_id'),
+        return Inertia::render('admin/new-reservation/consignee-contacts', [
+            'customer_id'           => session('customer_id') ?? $request->user()->id,
+            'customers'             => $customers,
+            'service_type'          => session('service_type', 'Cargo / Delivery Services'),
+            'special_instructions'  => session('special_instructions'),
+            'waypoints'             => session('waypoints', []),
+            'edit_mode'             => session()->has('edit_reservation_id'),
+            'edit_reservation_id'   => session('edit_reservation_id'),
         ]);
     }
 
     public function renderStep4(Request $request)
     {
-        return Inertia::render('admin/new-reservation/details', [
-            'customer_id'           => session('customer_id') ?? $request->user()->id,
-            'service_type'          => session('service_type'),
-            'time'                  => session('time'),
-            'cargo_details'         => session('cargo_details'),
-            'special_instructions'  => session('special_instructions'),
-            'edit_mode' => session()->has('edit_reservation_id'),
-            'edit_reservation_id' => session('edit_reservation_id'),
-        ]);
-    }
-
-    public function renderStep5(Request $request)
-    {
         $selectedVehicle = session('vehicle_id')
             ? Vehicle::with('driver')->where('vehicle_id', session('vehicle_id'))->first()
             : null;
 
-        $customer = User::query()
-            ->select('id', 'name', 'email')
-            ->find(session('customer_id') ?? $request->user()->id);
+        $targetCustomerId = ($request->user()->role === 'CUSTOMER')
+            ? $request->user()->id
+            : (session('customer_id') ?? $request->user()->id);
+
+        $customer = User::query()->select('id', 'name', 'email')->find($targetCustomerId);
+
+        $waypoints = session('waypoints', []);
+        $extraStopsCount = max(0, count($waypoints) - 1);
+
+        $serviceType = session('service_type', 'Cargo / Delivery Services');
+        $pricing = \App\Models\Pricing::where('service_type', $serviceType)->first();
+
+        $baseRateCents = $pricing ? (int) ($pricing->base_rate_cents ?: ($pricing->base_rate * 100)) : 150000;
+        $perKmRateCents = $pricing ? (int) ($pricing->distance_rate_cents ?: ($pricing->distance_rate * 100)) : 4500;
+        $multiStopSurchargeCents = $extraStopsCount * 30000; // ₱300 per extra stop
+        $totalFareCents = $baseRateCents + (15 * $perKmRateCents) + $multiStopSurchargeCents;
 
         return Inertia::render('admin/new-reservation/summary', [
             'summary' => [
-                'customer_id' => session('customer_id') ?? $request->user()->id,
-                'date' => $this->normalizeReservationDate(session('date')),
-                'time' => session('time'),
-                'vehicle_id' => session('vehicle_id'),
-                'pickup_address' => session('pickup_address'),
-                'pickup_latlng' => session('pickup_latlng'),
-                'dropoff_address' => session('dropoff_address'),
-                'dropoff_latlng' => session('dropoff_latlng'),
-                'service_type' => session('service_type'),
-                'cargo_details' => session('cargo_details'),
-                'special_instructions' => session('special_instructions'),
+                'customer_id'                => $targetCustomerId,
+                'date'                       => $this->normalizeReservationDate(session('date', date('Y-m-d'))),
+                'time'                       => session('time', '09:00'),
+                'vehicle_id'                 => session('vehicle_id'),
+                'pickup_address'             => session('pickup_address'),
+                'pickup_latlng'              => session('pickup_latlng'),
+                'dropoff_address'            => $waypoints[0]['address'] ?? session('dropoff_address', 'Destination'),
+                'dropoff_latlng'             => $waypoints[0]['latlng'] ?? session('dropoff_latlng', '14.6,121.0'),
+                'waypoints'                  => $waypoints,
+                'service_type'               => $serviceType,
+                'cargo_details'              => session('cargo_details', 'Standard Delivery'),
+                'cargo_type'                 => session('cargo_type', 'General Freight'),
+                'cargo_weight_kg'            => session('cargo_weight_kg', 100),
+                'max_capacity_kg'            => session('max_capacity_kg', 1500),
+                'special_instructions'       => session('special_instructions'),
+                'base_fare_cents'            => $baseRateCents,
+                'per_km_rate_applied_cents'  => $perKmRateCents,
+                'multi_stop_surcharge_cents' => $multiStopSurchargeCents,
+                'total_fare_cents'           => $totalFareCents,
             ],
             'selectedVehicle' => $selectedVehicle,
-            'customer' => $customer,
-            'edit_mode' => session()->has('edit_reservation_id'),
+            'customer'        => $customer,
+            'edit_mode'       => session()->has('edit_reservation_id'),
             'edit_reservation_id' => session('edit_reservation_id'),
         ]);
     }
 
-
     public function processStep1(ProcessStep1Request $request): RedirectResponse
     {
-
         $validated = $request->validated();
 
-        $request->session()->put('vehicle_id', $validated['vehicle_id']);
-        $request->session()->put('date', $validated['date']);
+        $request->session()->put('pickup_address', $validated['pickup_address']);
+        $request->session()->put('pickup_latlng', $validated['pickup_latlng']);
+        $request->session()->put('waypoints', $validated['waypoints']);
         $request->session()->put('current_step', 2);
 
         return redirect()->route('reservations.step', ['step' => 2]);
@@ -423,8 +430,29 @@ class ReservationController extends Controller
     {
         $validated = $request->validated();
 
-        $request->session()->put('pickup_address', $validated['pickup_address']);
-        $request->session()->put('pickup_latlng', $validated['pickup_latlng']);
+        $cargoWeightKg = (int) $validated['cargo_weight_kg'];
+        $vehicle = Vehicle::where('vehicle_id', $validated['vehicle_id'])->firstOrFail();
+
+        $vehicleMaxKg = 1500;
+        if ($vehicle->capacity) {
+            preg_match('/(\d+)/', $vehicle->capacity, $matches);
+            if (! empty($matches[1])) {
+                $vehicleMaxKg = (int) $matches[1];
+            }
+        }
+
+        if ($cargoWeightKg > $vehicleMaxKg) {
+            return back()->withErrors([
+                'cargo_weight_kg' => "Selected vehicle payload capacity ({$vehicleMaxKg} kg) cannot carry requested cargo weight ({$cargoWeightKg} kg).",
+            ]);
+        }
+
+        $request->session()->put('date', $validated['date']);
+        $request->session()->put('time', $validated['time']);
+        $request->session()->put('cargo_type', $validated['cargo_type']);
+        $request->session()->put('cargo_weight_kg', $cargoWeightKg);
+        $request->session()->put('max_capacity_kg', $vehicleMaxKg);
+        $request->session()->put('vehicle_id', $validated['vehicle_id']);
         $request->session()->put('current_step', 3);
 
         return redirect()->route('reservations.step', ['step' => 3]);
@@ -434,8 +462,14 @@ class ReservationController extends Controller
     {
         $validated = $request->validated();
 
-        $request->session()->put('dropoff_address', $validated['dropoff_address']);
-        $request->session()->put('dropoff_latlng', $validated['dropoff_latlng']);
+        $targetCustomerId = ($request->user()->role === 'CUSTOMER')
+            ? (string) $request->user()->id
+            : (string) ($validated['customer_id'] ?? $request->user()->id);
+
+        $request->session()->put('customer_id', $targetCustomerId);
+        $request->session()->put('service_type', $validated['service_type']);
+        $request->session()->put('special_instructions', $validated['special_instructions']);
+        $request->session()->put('waypoints', $validated['waypoints']);
         $request->session()->put('current_step', 4);
 
         return redirect()->route('reservations.step', ['step' => 4]);
@@ -443,18 +477,7 @@ class ReservationController extends Controller
 
     public function processStep4(ProcessStep4Request $request): RedirectResponse
     {
-
-
-        $validated = $request->validated();
-
-
-        $request->session()->put('service_type', $validated['service_type']);
-        $request->session()->put('time', $validated['time']);
-        $request->session()->put('cargo_details', $validated['cargo_details']);
-        $request->session()->put('special_instructions', $validated['special_instructions']);
-        $request->session()->put('current_step', 5);
-
-        return redirect()->route('reservations.step', ['step' => 5]);
+        return $this->processStep5($request);
     }
 
     public function processStep5(Request $request): RedirectResponse
@@ -462,67 +485,95 @@ class ReservationController extends Controller
         $isEdit = session()->has('edit_reservation_id');
         $reservationId = $isEdit ? session('edit_reservation_id') : Str::orderedUuid();
 
+        $targetCustomerId = ($request->user()->role === 'CUSTOMER')
+            ? (string) $request->user()->id
+            : (string) (session('customer_id') ?? $request->user()->id);
+
+        $waypoints = session('waypoints', []);
+        $firstDropoff = $waypoints[0] ?? ['address' => 'Destination', 'latlng' => '14.6,121.0'];
+
+        $extraStopsCount = max(0, count($waypoints) - 1);
+        $serviceType = session('service_type', 'Cargo / Delivery Services');
+        $pricing = \App\Models\Pricing::where('service_type', $serviceType)->first();
+
+        $baseRateCents = $pricing ? (int) ($pricing->base_rate_cents ?: ($pricing->base_rate * 100)) : 150000;
+        $perKmRateCents = $pricing ? (int) ($pricing->distance_rate_cents ?: ($pricing->distance_rate * 100)) : 4500;
+        $perMinRateCents = $pricing ? (int) ($pricing->travel_time_rate_cents ?: ($pricing->travel_time_rate * 100)) : 1500;
+        $multiStopSurchargeCents = $extraStopsCount * 30000;
+        $totalFareCents = $baseRateCents + (15 * $perKmRateCents) + $multiStopSurchargeCents;
+
         if ($isEdit) {
             $reservation = Reservation::where('reservation_id', $reservationId)->firstOrFail();
             $reservation->update([
-                'pickup_address'       => session('pickup_address'),
-                'pickup_latlng'        => session('pickup_latlng'),
-                'dropoff_address'      => session('dropoff_address'),
-                'dropoff_latlng'       => session('dropoff_latlng'),
-                'customer_id'          => session('customer_id') ?? $request->user()->id,
-                'service_type'         => session('service_type'),
-                'date'                 => session('date'),
-                'time'                 => session('time'),
-                'cargo_details'        => session('cargo_details'),
-                'special_instructions' => session('special_instructions'),
+                'pickup_address'             => session('pickup_address'),
+                'pickup_latlng'              => session('pickup_latlng'),
+                'dropoff_address'            => $firstDropoff['address'],
+                'dropoff_latlng'             => $firstDropoff['latlng'],
+                'waypoints'                  => $waypoints,
+                'customer_id'                => $targetCustomerId,
+                'service_type'               => $serviceType,
+                'date'                       => session('date'),
+                'time'                       => session('time'),
+                'cargo_details'              => session('cargo_details', 'Standard Delivery'),
+                'cargo_type'                 => session('cargo_type', 'General Freight'),
+                'cargo_weight_kg'            => session('cargo_weight_kg', 100),
+                'max_capacity_kg'            => session('max_capacity_kg', 1500),
+                'special_instructions'       => session('special_instructions'),
+                'multi_stop_surcharge_cents' => $multiStopSurchargeCents,
+                'total_fare_cents'           => $totalFareCents,
             ]);
 
             $dispatch = Dispatch::where('reservation_id', $reservationId)->first();
             if ($dispatch) {
                 $dispatch->update([
                     'vehicle_id' => session('vehicle_id'),
-                    'schedule' => session('date') . " " . session('time'),
-                ]);
-            } else {
-                Dispatch::create([
-                    'reservation_id'    => $reservationId,
-                    'vehicle_id'        => session('vehicle_id'),
-                    'schedule'          => session('date') . " " . session('time'),
-                    'assigned_at'       => now(),
+                    'schedule'   => session('date') . ' ' . session('time'),
                 ]);
             }
         } else {
+            $waybillNumber = Reservation::generateWaybillNumber();
+
             Dispatch::create([
-                'reservation_id'    => $reservationId,
-                'vehicle_id'        => session('vehicle_id'),
-                'schedule'          => session('date') . " " . session('time'),
-                'assigned_at'       => now(),
+                'reservation_id' => $reservationId,
+                'vehicle_id'     => session('vehicle_id'),
+                'schedule'       => session('date') . ' ' . session('time'),
+                'assigned_at'    => now(),
             ]);
 
             $reservation = Reservation::create([
-                'status'               => "PENDING",
-                'reservation_id'      => $reservationId,
-                'pickup_address'      => session('pickup_address'),
-                'pickup_latlng'       => session('pickup_latlng'),
-                'dropoff_address'     => session('dropoff_address'),
-                'dropoff_latlng'      => session('dropoff_latlng'),
-                'customer_id'         => $request->user()->id,
-                'service_type'        => session('service_type'),
-                'date'                => session('date'),
-                'time'                => session('time'),
-                'cargo_details'       => session('cargo_details'),
-                'special_instructions' => session('special_instructions'),
+                'status'                     => 'PENDING',
+                'reservation_id'             => $reservationId,
+                'waybill_number'             => $waybillNumber,
+                'pickup_address'             => session('pickup_address'),
+                'pickup_latlng'              => session('pickup_latlng'),
+                'dropoff_address'            => $firstDropoff['address'],
+                'dropoff_latlng'             => $firstDropoff['latlng'],
+                'waypoints'                  => $waypoints,
+                'customer_id'                => $targetCustomerId,
+                'service_type'               => $serviceType,
+                'date'                       => session('date'),
+                'time'                       => session('time'),
+                'cargo_details'              => session('cargo_details', 'Standard Delivery'),
+                'cargo_type'                 => session('cargo_type', 'General Freight'),
+                'cargo_weight_kg'            => session('cargo_weight_kg', 100),
+                'max_capacity_kg'            => session('max_capacity_kg', 1500),
+                'special_instructions'       => session('special_instructions'),
+                'total_fare_cents'           => $totalFareCents,
+                'base_rate_applied_cents'    => $baseRateCents,
+                'per_km_rate_applied_cents'  => $perKmRateCents,
+                'per_min_rate_applied_cents' => $perMinRateCents,
+                'multi_stop_surcharge_cents' => $multiStopSurchargeCents,
             ]);
         }
 
         if (! $isEdit) {
             SystemLog::create([
-                'datelog' => now()->toDateString(),
-                'timelog' => now()->format('H:i:s'),
-                'action' => 'ADD',
-                'module' => 'RESERVATIONS',
+                'datelog'      => now()->toDateString(),
+                'timelog'      => now()->format('H:i:s'),
+                'action'       => 'ADD',
+                'module'       => 'RESERVATIONS',
                 'performed_to' => (string) $reservationId,
-                'description' => 'Reservation was created.',
+                'description'  => 'Reservation and Waybill #' . ($reservation->waybill_number ?: $reservationId) . ' was created.',
             ]);
         }
 
@@ -531,9 +582,13 @@ class ReservationController extends Controller
             'pickup_latlng',
             'dropoff_address',
             'dropoff_latlng',
+            'waypoints',
             'service_type',
             'time',
             'cargo_details',
+            'cargo_type',
+            'cargo_weight_kg',
+            'max_capacity_kg',
             'special_instructions',
             'vehicle_id',
             'date',
@@ -548,10 +603,21 @@ class ReservationController extends Controller
         return redirect()
             ->route('reservations.index')
             ->with([
-                'modal_status' => "success",
-                'modal_action' => $isEdit ? "update" : "create",
-                'modal_title' => $isEdit ? "Reservation updated!" : "Reservation created!",
-                'modal_message' => "Reservation " . $reservation->reservation_id . " was " . ($isEdit ? "updated" : "created") . " successfully.",
+                'modal_status'  => 'success',
+                'modal_action'  => $isEdit ? 'update' : 'create',
+                'modal_title'   => $isEdit ? 'Reservation updated!' : 'Waybill created!',
+                'modal_message' => 'Waybill ' . ($reservation->waybill_number ?: $reservation->reservation_id) . ' was dispatched successfully.',
             ]);
+    }
+
+    public function printWaybill($reservation_id)
+    {
+        $reservation = Reservation::with(['dispatch.vehicle.driver', 'customer'])
+            ->where('reservation_id', $reservation_id)
+            ->firstOrFail();
+
+        return Inertia::render('admin/waybill-print', [
+            'reservation' => $reservation,
+        ]);
     }
 }

@@ -17,8 +17,11 @@ class ProcessStep2Request extends FormRequest
     public function rules(): array
     {
         return [
-            'pickup_address' => ['required', 'string', 'max:255'],
-            'pickup_latlng' => ['required', 'string', 'max:150'],
+            'date' => ['required', 'date_format:Y-m-d', 'after_or_equal:today'],
+            'time' => ['required', 'string', 'max:50'],
+            'cargo_type' => ['required', 'string', 'max:100'],
+            'cargo_weight_kg' => ['required', 'numeric', 'min:1'],
+            'vehicle_id' => ['required', 'string', 'max:50', Rule::exists('vehicles', 'vehicle_id')],
         ];
     }
 }

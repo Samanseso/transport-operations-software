@@ -10,13 +10,13 @@ use App\Models\SystemLog;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class FleetController extends Controller
 {
     public function index(Request $request)
     {
-        $assignedDriverIds = Vehicle::whereNotNull('driver_id')->pluck('driver_id')->filter()->values();
-        $availableDrivers = Driver::whereNotIn('driver_id', $assignedDriverIds)->get();
+        $allDrivers = Driver::orderBy('name', 'asc')->get();
         $recentVehicleLogs = SystemLog::where('module', 'VEHICLES')
             ->orderBy('datelog', 'desc')
             ->orderBy('timelog', 'desc')
@@ -25,15 +25,14 @@ class FleetController extends Controller
 
         return Inertia::render('admin/fleet-management', [
             'vehicles' => Vehicle::with('driver')->get(),
-            'availableDrivers' => $availableDrivers,
+            'availableDrivers' => $allDrivers,
             'recentVehicleLogs' => $recentVehicleLogs,
         ]);
     }
 
     public function show($vehicle_id)
     {
-        $assignedDriverIds = Vehicle::whereNotNull('driver_id')->pluck('driver_id')->filter()->values();
-        $availableDrivers = Driver::whereNotIn('driver_id', $assignedDriverIds)->get();
+        $allDrivers = Driver::orderBy('name', 'asc')->get();
 
         $vehicle_reservations = Reservation::whereIn('reservation_id', Dispatch::where("vehicle_id", $vehicle_id)
         ->pluck('reservation_id'))
@@ -46,12 +45,11 @@ class FleetController extends Controller
             )
         ->get();
 
-
         return Inertia::render('admin/fleet-details', [
             'vehicles' => Vehicle::with('driver')->get(),
             'selectedVehicle' => Vehicle::with('driver')->where('vehicle_id', $vehicle_id)->firstOrFail(),
             'reservations' => $vehicle_reservations,
-            'availableDrivers' => $availableDrivers,
+            'availableDrivers' => $allDrivers,
         ]);
     }
 
@@ -59,27 +57,24 @@ class FleetController extends Controller
     {
         $validated = $request->validate([
             'plate_number' => ['required', 'string', 'max:255'],
+            'vin_number' => ['nullable', 'string', 'max:100', 'unique:vehicles,vin_number'],
             'model' => ['required', 'string', 'max:255'],
             'capacity' => ['nullable', 'string', 'max:255'],
-            'status' => ['required', 'string', 'max:255'],
+            'registration_expires_at' => ['nullable', 'date'],
+            'insurance_expires_at' => ['nullable', 'date'],
+            'status' => ['required', 'string', Rule::in(['AVAILABLE', 'IN_USE', 'IN_MAINTENANCE', 'UNSAFE_FOR_DRIVE'])],
             'driver_id' => ['nullable', 'string', 'max:255', 'exists:drivers,driver_id'],
         ]);
 
-        if (! empty($validated['driver_id'])) {
-            $alreadyAssigned = Vehicle::where('driver_id', $validated['driver_id'])->first();
-            if ($alreadyAssigned) {
-                return back()->withErrors([
-                    'driver_id' => 'That driver is already assigned to a vehicle.',
-                ]);
-            }
-        }
-
         Vehicle::create([
-            'vehicle_id' => Str::orderedUuid(),
+            'vehicle_id' => (string) Str::orderedUuid(),
             'driver_id' => $validated['driver_id'] ?? null,
             'plate_number' => $validated['plate_number'],
+            'vin_number' => $validated['vin_number'] ?? null,
             'model' => $validated['model'],
             'capacity' => $validated['capacity'] ?? null,
+            'registration_expires_at' => $validated['registration_expires_at'] ?? null,
+            'insurance_expires_at' => $validated['insurance_expires_at'] ?? null,
             'status' => $validated['status'],
             'created_at' => now(),
             'updated_at' => now(),
@@ -92,6 +87,61 @@ class FleetController extends Controller
             ]);
         }
 
+        SystemLog::create([
+            'datelog' => now()->toDateString(),
+            'timelog' => now()->format('H:i:s'),
+            'action' => 'ADD',
+            'module' => 'VEHICLES',
+            'performed_to' => $validated['plate_number'],
+            'description' => 'Vehicle '.$validated['plate_number'].' registered in fleet catalog.',
+        ]);
+
         return redirect()->route('fleet.index');
+    }
+
+    public function update(Request $request, $vehicle_id)
+    {
+        $vehicle = Vehicle::where('vehicle_id', $vehicle_id)->firstOrFail();
+
+        $validated = $request->validate([
+            'plate_number' => ['required', 'string', 'max:255'],
+            'vin_number' => ['nullable', 'string', 'max:100', Rule::unique('vehicles', 'vin_number')->ignore($vehicle->vehicle_id, 'vehicle_id')],
+            'model' => ['required', 'string', 'max:255'],
+            'capacity' => ['nullable', 'string', 'max:255'],
+            'registration_expires_at' => ['nullable', 'date'],
+            'insurance_expires_at' => ['nullable', 'date'],
+            'status' => ['required', 'string', Rule::in(['AVAILABLE', 'IN_USE', 'IN_MAINTENANCE', 'UNSAFE_FOR_DRIVE'])],
+            'driver_id' => ['nullable', 'string', 'max:255', 'exists:drivers,driver_id'],
+        ]);
+
+        $vehicle->update([
+            'plate_number' => $validated['plate_number'],
+            'vin_number' => $validated['vin_number'] ?? null,
+            'model' => $validated['model'],
+            'capacity' => $validated['capacity'] ?? null,
+            'registration_expires_at' => $validated['registration_expires_at'] ?? null,
+            'insurance_expires_at' => $validated['insurance_expires_at'] ?? null,
+            'status' => $validated['status'],
+            'driver_id' => $validated['driver_id'] ?? null,
+            'updated_at' => now(),
+        ]);
+
+        if (! empty($validated['driver_id'])) {
+            Driver::where('driver_id', $validated['driver_id'])->update([
+                'status' => 'ASSIGNED',
+                'updated_at' => now(),
+            ]);
+        }
+
+        SystemLog::create([
+            'datelog' => now()->toDateString(),
+            'timelog' => now()->format('H:i:s'),
+            'action' => 'UPDATE',
+            'module' => 'VEHICLES',
+            'performed_to' => $validated['plate_number'],
+            'description' => 'Vehicle '.$validated['plate_number'].' configuration updated.',
+        ]);
+
+        return redirect()->route('fleet.show', $vehicle_id);
     }
 }

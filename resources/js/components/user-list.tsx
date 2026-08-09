@@ -100,8 +100,12 @@ export default function UserList() {
                         />
                     </div>
 
-                    <Button type="button" onClick={() => setOpen(true)}>
-                        <Plus />
+                    <Button
+                        type="button"
+                        onClick={() => setOpen(true)}
+                        className="bg-sky-600 font-semibold text-white transition-all hover:bg-sky-700 active:scale-[0.98]"
+                    >
+                        <Plus className="h-4 w-4" />
                         New User
                     </Button>
                 </form>

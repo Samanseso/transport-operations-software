@@ -15,7 +15,7 @@ class ActiveDispatchController extends Controller
             'dispatch',
             'dispatch.vehicle',
             'dispatch.vehicle.driver',
-        ])->whereIn('status', ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING']);
+        ])->whereIn('status', Reservation::getActiveStatuses());
 
         $search = trim((string) $request->query('q', ''));
         $status = $request->query('status');
@@ -49,7 +49,7 @@ class ActiveDispatchController extends Controller
                 'q' => $search,
                 'status' => $status,
             ],
-            'statuses' => ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING'],
+            'statuses' => Reservation::getActiveStatuses(),
         ]);
     }
 
@@ -61,7 +61,7 @@ class ActiveDispatchController extends Controller
             'dispatch',
             'dispatch.vehicle',
             'dispatch.vehicle.driver',
-        ])->whereIn('status', ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING']);
+        ])->whereIn('status', Reservation::getActiveStatuses());
 
         $search = trim((string) $request->query('q', ''));
         $status = $request->query('status');
@@ -96,7 +96,7 @@ class ActiveDispatchController extends Controller
                 'q' => $search,
                 'status' => $status,
             ],
-            'statuses' => ['EN ROUTE', 'GOING TO PICKUP', 'GOING TO DROPOFF', 'WAITING'],
+            'statuses' => Reservation::getActiveStatuses(),
         ]);
     }
 }

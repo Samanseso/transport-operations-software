@@ -21,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
         // Ensure auth_token is attached as early as possible.
         $middleware->prepend(AttachTokenFromCookie::class);
 
+        $middleware->alias([
+            'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+        ]);
+
         $middleware->trustProxies(
             at: '*',
             headers: Request::HEADER_X_FORWARDED_FOR

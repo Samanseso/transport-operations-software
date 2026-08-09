@@ -21,6 +21,8 @@ class ProcessStep4Request extends FormRequest
             'service_type' => ['required', 'string', 'max:150'],
             'time' => ['required', 'string', 'max:150'],
             'cargo_details' => ['nullable', 'string', 'max:255'],
+            'cargo_type' => ['nullable', 'string', 'max:100'],
+            'cargo_weight_kg' => ['nullable', 'numeric', 'min:0'],
             'special_instructions' => ['nullable', 'string', 'max:255'],
         ];
     }

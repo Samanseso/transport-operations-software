@@ -93,7 +93,7 @@ const MapRoute = ({ reservation, padding = 0, driverFocus = false, initialDriver
         setLoadingRoute(true);
         getRoutes(waypoints)
             .then(res => {
-                setRoutePoints(res);
+                setRoutePoints(activeDriverPos ? [activeDriverPos, ...res] : res);
             })
             .catch(err => {
                 console.error("Failed to fetch routes:", err);

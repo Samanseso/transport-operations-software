@@ -176,6 +176,103 @@ show.head = (args: { reservation_id: string | number } | [reservation_id: string
     
     show.form = showForm
 /**
+* @see \App\Http\Controllers\ReservationController::waybill
+ * @see app/Http/Controllers/ReservationController.php:613
+ * @route '/reservations/{reservation_id}/waybill'
+ */
+export const waybill = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: waybill.url(args, options),
+    method: 'get',
+})
+
+waybill.definition = {
+    methods: ["get","head"],
+    url: '/reservations/{reservation_id}/waybill',
+} satisfies RouteDefinition<["get","head"]>
+
+/**
+* @see \App\Http\Controllers\ReservationController::waybill
+ * @see app/Http/Controllers/ReservationController.php:613
+ * @route '/reservations/{reservation_id}/waybill'
+ */
+waybill.url = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions) => {
+    if (typeof args === 'string' || typeof args === 'number') {
+        args = { reservation_id: args }
+    }
+
+    
+    if (Array.isArray(args)) {
+        args = {
+                    reservation_id: args[0],
+                }
+    }
+
+    args = applyUrlDefaults(args)
+
+    const parsedArgs = {
+                        reservation_id: args.reservation_id,
+                }
+
+    return waybill.definition.url
+            .replace('{reservation_id}', parsedArgs.reservation_id.toString())
+            .replace(/\/+$/, '') + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\ReservationController::waybill
+ * @see app/Http/Controllers/ReservationController.php:613
+ * @route '/reservations/{reservation_id}/waybill'
+ */
+waybill.get = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: waybill.url(args, options),
+    method: 'get',
+})
+/**
+* @see \App\Http\Controllers\ReservationController::waybill
+ * @see app/Http/Controllers/ReservationController.php:613
+ * @route '/reservations/{reservation_id}/waybill'
+ */
+waybill.head = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: waybill.url(args, options),
+    method: 'head',
+})
+
+    /**
+* @see \App\Http\Controllers\ReservationController::waybill
+ * @see app/Http/Controllers/ReservationController.php:613
+ * @route '/reservations/{reservation_id}/waybill'
+ */
+    const waybillForm = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        action: waybill.url(args, options),
+        method: 'get',
+    })
+
+            /**
+* @see \App\Http\Controllers\ReservationController::waybill
+ * @see app/Http/Controllers/ReservationController.php:613
+ * @route '/reservations/{reservation_id}/waybill'
+ */
+        waybillForm.get = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: waybill.url(args, options),
+            method: 'get',
+        })
+            /**
+* @see \App\Http\Controllers\ReservationController::waybill
+ * @see app/Http/Controllers/ReservationController.php:613
+ * @route '/reservations/{reservation_id}/waybill'
+ */
+        waybillForm.head = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+            action: waybill.url(args, {
+                        [options?.mergeQuery ? 'mergeQuery' : 'query']: {
+                            _method: 'HEAD',
+                            ...(options?.query ?? options?.mergeQuery ?? {}),
+                        }
+                    }),
+            method: 'get',
+        })
+    
+    waybill.form = waybillForm
+/**
 * @see \App\Http\Controllers\ReservationController::edit
  * @see app/Http/Controllers/ReservationController.php:189
  * @route '/reservations/{reservation_id}/edit'
@@ -455,7 +552,7 @@ step.head = (args: { step: string | number } | [step: string | number ] | string
     step.form = stepForm
 /**
 * @see \App\Http\Controllers\ReservationController::processStep1
- * @see app/Http/Controllers/ReservationController.php:410
+ * @see app/Http/Controllers/ReservationController.php:417
  * @route '/reservations/create/processStep1'
  */
 export const processStep1 = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -470,7 +567,7 @@ processStep1.definition = {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep1
- * @see app/Http/Controllers/ReservationController.php:410
+ * @see app/Http/Controllers/ReservationController.php:417
  * @route '/reservations/create/processStep1'
  */
 processStep1.url = (options?: RouteQueryOptions) => {
@@ -479,7 +576,7 @@ processStep1.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep1
- * @see app/Http/Controllers/ReservationController.php:410
+ * @see app/Http/Controllers/ReservationController.php:417
  * @route '/reservations/create/processStep1'
  */
 processStep1.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -489,7 +586,7 @@ processStep1.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
     /**
 * @see \App\Http\Controllers\ReservationController::processStep1
- * @see app/Http/Controllers/ReservationController.php:410
+ * @see app/Http/Controllers/ReservationController.php:417
  * @route '/reservations/create/processStep1'
  */
     const processStep1Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -504,7 +601,7 @@ processStep1.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
             /**
 * @see \App\Http\Controllers\ReservationController::processStep1
- * @see app/Http/Controllers/ReservationController.php:410
+ * @see app/Http/Controllers/ReservationController.php:417
  * @route '/reservations/create/processStep1'
  */
         processStep1Form.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -520,7 +617,7 @@ processStep1.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
     processStep1.form = processStep1Form
 /**
 * @see \App\Http\Controllers\ReservationController::processStep2
- * @see app/Http/Controllers/ReservationController.php:422
+ * @see app/Http/Controllers/ReservationController.php:429
  * @route '/reservations/create/processStep2'
  */
 export const processStep2 = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -535,7 +632,7 @@ processStep2.definition = {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep2
- * @see app/Http/Controllers/ReservationController.php:422
+ * @see app/Http/Controllers/ReservationController.php:429
  * @route '/reservations/create/processStep2'
  */
 processStep2.url = (options?: RouteQueryOptions) => {
@@ -544,7 +641,7 @@ processStep2.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep2
- * @see app/Http/Controllers/ReservationController.php:422
+ * @see app/Http/Controllers/ReservationController.php:429
  * @route '/reservations/create/processStep2'
  */
 processStep2.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -554,7 +651,7 @@ processStep2.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
     /**
 * @see \App\Http\Controllers\ReservationController::processStep2
- * @see app/Http/Controllers/ReservationController.php:422
+ * @see app/Http/Controllers/ReservationController.php:429
  * @route '/reservations/create/processStep2'
  */
     const processStep2Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -569,7 +666,7 @@ processStep2.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
             /**
 * @see \App\Http\Controllers\ReservationController::processStep2
- * @see app/Http/Controllers/ReservationController.php:422
+ * @see app/Http/Controllers/ReservationController.php:429
  * @route '/reservations/create/processStep2'
  */
         processStep2Form.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -585,7 +682,7 @@ processStep2.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
     processStep2.form = processStep2Form
 /**
 * @see \App\Http\Controllers\ReservationController::processStep3
- * @see app/Http/Controllers/ReservationController.php:433
+ * @see app/Http/Controllers/ReservationController.php:461
  * @route '/reservations/create/processStep3'
  */
 export const processStep3 = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -600,7 +697,7 @@ processStep3.definition = {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep3
- * @see app/Http/Controllers/ReservationController.php:433
+ * @see app/Http/Controllers/ReservationController.php:461
  * @route '/reservations/create/processStep3'
  */
 processStep3.url = (options?: RouteQueryOptions) => {
@@ -609,7 +706,7 @@ processStep3.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep3
- * @see app/Http/Controllers/ReservationController.php:433
+ * @see app/Http/Controllers/ReservationController.php:461
  * @route '/reservations/create/processStep3'
  */
 processStep3.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -619,7 +716,7 @@ processStep3.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
     /**
 * @see \App\Http\Controllers\ReservationController::processStep3
- * @see app/Http/Controllers/ReservationController.php:433
+ * @see app/Http/Controllers/ReservationController.php:461
  * @route '/reservations/create/processStep3'
  */
     const processStep3Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -634,7 +731,7 @@ processStep3.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
             /**
 * @see \App\Http\Controllers\ReservationController::processStep3
- * @see app/Http/Controllers/ReservationController.php:433
+ * @see app/Http/Controllers/ReservationController.php:461
  * @route '/reservations/create/processStep3'
  */
         processStep3Form.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -650,7 +747,7 @@ processStep3.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
     processStep3.form = processStep3Form
 /**
 * @see \App\Http\Controllers\ReservationController::processStep4
- * @see app/Http/Controllers/ReservationController.php:444
+ * @see app/Http/Controllers/ReservationController.php:478
  * @route '/reservations/create/processStep4'
  */
 export const processStep4 = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -665,7 +762,7 @@ processStep4.definition = {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep4
- * @see app/Http/Controllers/ReservationController.php:444
+ * @see app/Http/Controllers/ReservationController.php:478
  * @route '/reservations/create/processStep4'
  */
 processStep4.url = (options?: RouteQueryOptions) => {
@@ -674,7 +771,7 @@ processStep4.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep4
- * @see app/Http/Controllers/ReservationController.php:444
+ * @see app/Http/Controllers/ReservationController.php:478
  * @route '/reservations/create/processStep4'
  */
 processStep4.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -684,7 +781,7 @@ processStep4.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
     /**
 * @see \App\Http\Controllers\ReservationController::processStep4
- * @see app/Http/Controllers/ReservationController.php:444
+ * @see app/Http/Controllers/ReservationController.php:478
  * @route '/reservations/create/processStep4'
  */
     const processStep4Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -699,7 +796,7 @@ processStep4.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
             /**
 * @see \App\Http\Controllers\ReservationController::processStep4
- * @see app/Http/Controllers/ReservationController.php:444
+ * @see app/Http/Controllers/ReservationController.php:478
  * @route '/reservations/create/processStep4'
  */
         processStep4Form.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -715,7 +812,7 @@ processStep4.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
     processStep4.form = processStep4Form
 /**
 * @see \App\Http\Controllers\ReservationController::processStep5
- * @see app/Http/Controllers/ReservationController.php:460
+ * @see app/Http/Controllers/ReservationController.php:483
  * @route '/reservations/create/processStep5'
  */
 export const processStep5 = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -730,7 +827,7 @@ processStep5.definition = {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep5
- * @see app/Http/Controllers/ReservationController.php:460
+ * @see app/Http/Controllers/ReservationController.php:483
  * @route '/reservations/create/processStep5'
  */
 processStep5.url = (options?: RouteQueryOptions) => {
@@ -739,7 +836,7 @@ processStep5.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ReservationController::processStep5
- * @see app/Http/Controllers/ReservationController.php:460
+ * @see app/Http/Controllers/ReservationController.php:483
  * @route '/reservations/create/processStep5'
  */
 processStep5.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -749,7 +846,7 @@ processStep5.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
     /**
 * @see \App\Http\Controllers\ReservationController::processStep5
- * @see app/Http/Controllers/ReservationController.php:460
+ * @see app/Http/Controllers/ReservationController.php:483
  * @route '/reservations/create/processStep5'
  */
     const processStep5Form = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -764,7 +861,7 @@ processStep5.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 
             /**
 * @see \App\Http\Controllers\ReservationController::processStep5
- * @see app/Http/Controllers/ReservationController.php:460
+ * @see app/Http/Controllers/ReservationController.php:483
  * @route '/reservations/create/processStep5'
  */
         processStep5Form.patch = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -781,6 +878,7 @@ processStep5.patch = (options?: RouteQueryOptions): RouteDefinition<'patch'> => 
 const reservations = {
     index: Object.assign(index, index),
 show: Object.assign(show, show),
+waybill: Object.assign(waybill, waybill),
 edit: Object.assign(edit, edit055014),
 destroy: Object.assign(destroy, destroy),
 step: Object.assign(step, step),

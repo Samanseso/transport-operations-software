@@ -51,37 +51,45 @@ const FleetDetails = () => {
                                 <Button variant="ghost"><EllipsisVertical /></Button>
                             </div>
                         </div>
-                        <div className='flex justify-between bg-muted full p-6 rounded'>
-                            <div className='flex flex-col gap-5'>
-                                <p className='text-lg font-bold'>{props.selectedVehicle.model}</p>
-                                <div className='flex gap-15'>
+                        <div className='flex justify-between bg-muted full p-6 rounded relative overflow-hidden'>
+                            <div className='flex flex-col gap-4'>
+                                <div className="flex items-center gap-3">
+                                    <p className='text-lg font-bold'>{props.selectedVehicle.model}</p>
+                                    <span className={`rounded-full px-3 py-1 text-xs font-bold ${
+                                        props.selectedVehicle.status === "UNSAFE_FOR_DRIVE"
+                                            ? "bg-red-600 text-white"
+                                            : props.selectedVehicle.status === "IN_MAINTENANCE"
+                                            ? "bg-rose-500 text-white"
+                                            : "bg-emerald-600 text-white"
+                                    }`}>
+                                        {props.selectedVehicle.status}
+                                    </span>
+                                </div>
+                                <div className='flex flex-wrap gap-8'>
                                     <div>
-                                        <p className='text-xs text-gray-500'>Payload</p>
-                                        <p className='font-bold'>2,885 lbs</p>
+                                        <p className='text-xs text-gray-500'>VIN Chassis Number</p>
+                                        <p className='font-mono font-bold text-sm'>{props.selectedVehicle.vin_number || "N/A"}</p>
                                     </div>
-
                                     <div>
-                                        <p className='text-xs text-gray-500'>Load Volume</p>
-                                        <p className='font-bold'>353.937 in<sup>3</sup></p>
+                                        <p className='text-xs text-gray-500'>Capacity / Load</p>
+                                        <p className='font-bold text-sm'>{props.selectedVehicle.capacity || "Default Specs"}</p>
                                     </div>
-
                                     <div>
-                                        <p className='text-xs text-gray-500'>Load Length</p>
-                                        <p className='font-bold'>117 in</p>
+                                        <p className='text-xs text-gray-500'>Registration Expiry</p>
+                                        <p className='font-mono font-bold text-sm'>{props.selectedVehicle.registration_expires_at || "Not Set"}</p>
                                     </div>
-
                                     <div>
-                                        <p className='text-xs text-gray-500'>Load Width</p>
-                                        <p className='font-bold'>67 in</p>
+                                        <p className='text-xs text-gray-500'>Insurance Expiry</p>
+                                        <p className='font-mono font-bold text-sm'>{props.selectedVehicle.insurance_expires_at || "Not Set"}</p>
                                     </div>
                                 </div>
 
-                                <div className='flex gap-7 items-center'>
-                                    <div className='w-22 text-center border-1 border-black rounded'>
+                                <div className='flex gap-7 items-center mt-1'>
+                                    <div className='w-22 text-center border-1 border-black rounded bg-white dark:bg-black'>
                                         <div className='flex justify-center gap-2'>
-                                            <p className='text-[9px]'>Plate Number</p>
+                                            <p className='text-[9px] text-gray-500'>Plate Number</p>
                                         </div>
-                                        <p className='license-font text-xl'>{props.selectedVehicle.plate_number.replace("-", "")}</p>
+                                        <p className='license-font text-xl font-bold'>{props.selectedVehicle.plate_number.replace("-", "")}</p>
                                     </div>
 
                                     <Button variant="ghost" className='text-gray-600'>Documents<ExternalLink /></Button>

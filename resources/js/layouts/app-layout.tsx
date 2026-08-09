@@ -9,15 +9,20 @@ interface AppLayoutProps {
     breadcrumbs?: BreadcrumbItem[];
 }
 
-export default ({ children, breadcrumbs, ...props }: AppLayoutProps) => {
-
+function AppLayoutContent({ children, breadcrumbs, ...props }: AppLayoutProps) {
     const { getNavItems } = useSidebar();
 
-
     return (
-            <AppLayoutTemplate breadcrumbs={breadcrumbs} navItems={getNavItems()} {...props}>
-                {children}
-            </AppLayoutTemplate>
-    )
+        <AppLayoutTemplate breadcrumbs={breadcrumbs} navItems={getNavItems()} {...props}>
+            {children}
+        </AppLayoutTemplate>
+    );
+}
 
-};
+export default function AppLayout(props: AppLayoutProps) {
+    return (
+        <SidebarProvider>
+            <AppLayoutContent {...props} />
+        </SidebarProvider>
+    );
+}

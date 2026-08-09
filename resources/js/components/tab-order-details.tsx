@@ -1,56 +1,54 @@
-import { Reservation } from "@/types"
-import StatusTag from "./status-tag"
-import { Timer, Truck } from "lucide-react"
-
+import { Reservation } from '@/types';
+import { MapPin, Navigation } from 'lucide-react';
+import StatusTag from './status-tag';
 
 const TabOrderDetails = ({ reservation }: { reservation: Reservation }) => {
-
-    const startDate = new Date(reservation.dispatch.schedule);
+    const waybillNo = reservation.waybill_number || `WB-${reservation.reservation_id.slice(0, 8).toUpperCase()}`;
+    const startDate = reservation.dispatch?.schedule ? new Date(reservation.dispatch.schedule) : new Date(reservation.date);
     const endDate = new Date(reservation.date);
 
-    const startLoc = reservation.pickup_address;
-    const endLoc = reservation.dropoff_address;
-
-
-
-
     return (
-        <div className="px-4 py-3 h-27">
-            <div className="flex justify-between items-center mb-4">
-                <div className='flex gap-4 items-center'>
-                    <p className='text-sm'>ID <span className='id-code-font'>{
-                        reservation.reservation_id.split('-')[0] + "-" +
-                        reservation.reservation_id.split('-')[1] +
-                        "..."
-                    }</span>
-                    </p>
+        <div className="h-28 space-y-2.5 px-4 py-3 text-slate-800 dark:text-slate-200">
+            {/* Header: Waybill ID + Status Tag */}
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <span className="font-mono text-xs font-bold text-sky-600 dark:text-sky-400">{waybillNo}</span>
                     <StatusTag text={reservation.status} />
                 </div>
 
-                <div className='flex items-center gap-2 text-gray-500'>
-                    <p className="text-sm">{reservation.service_type}</p>
+                <div className="text-right">
+                    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300">
+                        {reservation.service_type || 'General Freight'}
+                    </span>
                 </div>
             </div>
 
-            <div className='flex flex-row gap-2'>
-                <div className='w-18 flex flex-col gap-2'>
-                    <p className='text-xs text-gray-500 text-nowrap'>{startDate.toLocaleString('default', { month: 'short' })} {startDate.getDate()} {reservation.time}</p>
-                    <p className='text-xs text-gray-500 text-nowrap'>{endDate.toLocaleString('default', { month: 'short' })} {endDate.getDate()} {reservation.time}</p>
-                </div>
-                <div className="timeline">
-                    <div className="dot"></div>
-                    <div className="line"></div>
-                    <div className="dot"></div>
+            {/* Route Timeline */}
+            <div className="grid grid-cols-2 gap-3 border-t border-slate-100 pt-1 text-xs dark:border-slate-800/80">
+                <div className="flex items-start gap-2 truncate">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-emerald-500" />
+                    <div className="truncate">
+                        <span className="block text-[10px] text-slate-500">Pick-up Origin</span>
+                        <p className="truncate font-medium text-slate-900 dark:text-slate-100">{reservation.pickup_address}</p>
+                        <p className="font-mono text-[10px] text-slate-400">
+                            {startDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} {reservation.time}
+                        </p>
+                    </div>
                 </div>
 
-                <div className='flex flex-col gap-2 w-130'>
-                    <p className='text-xs truncate'>{startLoc}</p>
-                    <p className='text-xs truncate'>{endLoc}</p>
+                <div className="flex items-start gap-2 truncate">
+                    <Navigation className="mt-0.5 h-4 w-4 shrink-0 text-rose-500" />
+                    <div className="truncate">
+                        <span className="block text-[10px] text-slate-500">Dropoff Destination</span>
+                        <p className="truncate font-medium text-slate-900 dark:text-slate-100">{reservation.dropoff_address}</p>
+                        <p className="font-mono text-[10px] text-slate-400">
+                            {endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} {reservation.time}
+                        </p>
+                    </div>
                 </div>
             </div>
-
         </div>
-    )
-}
+    );
+};
 
-export default TabOrderDetails
+export default TabOrderDetails;

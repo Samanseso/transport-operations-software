@@ -87,19 +87,39 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
-        $request->validate([
+        if (strtoupper((string) $request->user()?->role) !== 'ADMINISTRATOR') {
+            abort(403, 'Only administrators can create users or assign roles.');
+        }
+
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'string', Rule::in(['ADMINISTRATOR', 'DRIVER', 'CUSTOMER'])],
+            'contact_number' => ['nullable', 'string', 'max:50'],
+            'license_number' => ['nullable', 'string', 'max:50'],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => strtoupper($validated['role']),
         ]);
+
+        if (strtoupper($validated['role']) === 'DRIVER') {
+            $driverId = 'DRV-' . sprintf('%04d', $user->id);
+            \App\Models\Driver::firstOrCreate(
+                ['driver_id' => $driverId],
+                [
+                    'name' => $user->name,
+                    'contact_number' => $request->input('contact_number') ?: '09170000000',
+                    'license_number' => $request->input('license_number') ?: 'N/A',
+                    'status' => 'AVAILABLE',
+                ]
+            );
+            $user->update(['role_id' => $driverId]);
+        }
 
         SystemLog::create([
             'datelog' => now()->toDateString(),
@@ -107,7 +127,7 @@ class UserController extends Controller
             'action' => 'ADD',
             'module' => 'USERS',
             'performed_to' => (string) $user->id,
-            'description' => 'User record for '.$user->name.' was created.',
+            'description' => 'User record for '.$user->name.' was created with role '.$user->role.'.',
         ]);
 
         return back()->with([
@@ -120,14 +140,30 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        if (strtoupper((string) $request->user()?->role) !== 'ADMINISTRATOR') {
+            abort(403, 'Only administrators can modify user roles or credentials.');
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'string',
+            'email' => 'required|string|email|max:255',
             'role' => ['required', 'string', Rule::in(['ADMINISTRATOR', 'DRIVER', 'CUSTOMER'])],
         ]);
 
+        $oldRole = $user->role;
+        $newRole = strtoupper($validated['role']);
 
-        $user->update($validated);
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => $newRole,
+            'updated_at' => now(),
+        ]);
+
+        // Revoke all active API Sanctum bearer tokens immediately if role changed or account edited
+        if ($oldRole !== $newRole) {
+            $user->tokens()->delete();
+        }
 
         SystemLog::create([
             'datelog' => now()->toDateString(),
@@ -135,7 +171,7 @@ class UserController extends Controller
             'action' => 'UPDATE',
             'module' => 'USERS',
             'performed_to' => (string) $user->id,
-            'description' => 'User information was updated.',
+            'description' => 'User #'.$user->id.' profile updated. Tokens revoked if role changed.',
         ]);
 
         return back()->with([
@@ -146,8 +182,24 @@ class UserController extends Controller
         ]);
     }
 
-    public function destroy(User $user) {
+    public function destroy(Request $request, User $user)
+    {
+        if (strtoupper((string) $request->user()?->role) !== 'ADMINISTRATOR') {
+            abort(403, 'Only administrators can delete user accounts.');
+        }
+
+        // Revoke tokens immediately before soft deleting
+        $user->tokens()->delete();
         $user->delete();
+
+        SystemLog::create([
+            'datelog' => now()->toDateString(),
+            'timelog' => now()->format('H:i:s'),
+            'action' => 'DELETE',
+            'module' => 'USERS',
+            'performed_to' => (string) $user->id,
+            'description' => 'User #'.$user->id.' account was soft-deleted and all tokens revoked.',
+        ]);
 
         return back()->with([
             'modal_status' => "success",

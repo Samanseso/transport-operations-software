@@ -11,6 +11,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('reservations', [ReservationController::class, 'index'])->name('reservations.index');
 
     Route::get('reservations/{reservation_id}', [ReservationController::class, 'show'])->name('reservations.show');
+    Route::get('reservations/{reservation_id}/waybill', [ReservationController::class, 'printWaybill'])->name('reservations.waybill');
     Route::get('reservations/{reservation_id}/edit', [ReservationController::class, 'edit'])->name('reservations.edit');
     Route::get('reservations/{reservation_id}/edit/step/{step}', [ReservationController::class, 'editStep'])->name('reservations.edit.step');
     Route::delete('/reservations/{reservation_id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');

@@ -1,17 +1,10 @@
+import DashboardMapSection from '@/components/dashboard-map-section';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import AppLayout from '@/layouts/app-layout';
 import { dashboard } from '@/routes';
-import { BreadcrumbItem, SharedData } from '@/types';
+import { BreadcrumbItem, Reservation, SharedData } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { SidebarProvider } from '@/components/ui/sidebar';
-import { Badge } from '@/components/ui/badge';
-import {
-    CalendarClock,
-    ClipboardList,
-    ShieldCheck,
-    Truck,
-    Users,
-    Wrench,
-} from 'lucide-react';
+import { CalendarClock, ClipboardList, ShieldCheck, TrendingUp, Truck, Users } from 'lucide-react';
 
 interface DashboardMetricGroup {
     reservations: {
@@ -78,6 +71,7 @@ interface AdminDashboardProps {
     };
     upcomingDispatches: UpcomingDispatch[];
     recentLogs: RecentLog[];
+    activeDispatches?: Reservation[];
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -90,10 +84,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Dashboard() {
     const { props } = usePage<SharedData & AdminDashboardProps>();
     const isOpen = props.sidebarOpen;
-    const trendMax = Math.max(
-        1,
-        ...props.trends.activity.flatMap((point) => [point.reservations, point.activity]),
-    );
+    const trendMax = Math.max(1, ...props.trends.activity.flatMap((point) => [point.reservations, point.activity]));
 
     const metricCards = [
         {
@@ -101,30 +92,35 @@ export default function Dashboard() {
             value: props.metrics.reservations.total,
             detail: `${props.metrics.reservations.today} created today`,
             icon: ClipboardList,
+            color: 'text-sky-600 bg-sky-50 dark:bg-sky-950/60 dark:text-sky-400',
         },
         {
             title: 'Active Dispatches',
             value: props.metrics.reservations.active,
             detail: `${props.metrics.dispatches_today} scheduled today`,
             icon: CalendarClock,
+            color: 'text-indigo-600 bg-indigo-50 dark:bg-indigo-950/60 dark:text-indigo-400',
         },
         {
             title: 'Fleet Ready',
             value: props.metrics.fleet.available,
             detail: `${props.metrics.fleet.total} total vehicles`,
             icon: Truck,
+            color: 'text-emerald-600 bg-emerald-50 dark:bg-emerald-950/60 dark:text-emerald-400',
         },
         {
             title: 'Customers',
             value: props.metrics.users.customers,
             detail: `${props.metrics.users.drivers} drivers in system`,
             icon: Users,
+            color: 'text-amber-600 bg-amber-50 dark:bg-amber-950/60 dark:text-amber-400',
         },
         {
             title: 'System Activity',
             value: props.metrics.logs_today,
-            detail: `${props.metrics.reservations.completed} completed reservations`,
+            detail: `${props.metrics.reservations.completed} completed jobs`,
             icon: ShieldCheck,
+            color: 'text-purple-600 bg-purple-50 dark:bg-purple-950/60 dark:text-purple-400',
         },
     ];
 
@@ -133,131 +129,135 @@ export default function Dashboard() {
             <AppLayout breadcrumbs={breadcrumbs}>
                 <Head title="Dashboard" />
 
-                <div className="space-y-6 p-4">
-                    <section className="overflow-hidden rounded-2xl border bg-gradient-to-br from-neutral-950 via-neutral-900 to-neutral-700 px-6 py-7 text-white shadow-sm">
-                        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                            <div className="max-w-2xl">
-                                <p className="text-xs uppercase tracking-[0.35em] text-white/60">Admin Console</p>
-                                <h1 className="mt-3 text-3xl font-semibold tracking-tight">Transport operations at a glance</h1>
-                                <p className="mt-2 text-sm text-white/70">
-                                    Real-time counts from reservations, fleet, users, dispatches, and activity logs.
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
-                                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                                    <p className="text-white/60">Assigned Fleet</p>
-                                    <p className="mt-1 text-xl font-semibold">{props.metrics.fleet.assigned}</p>
-                                </div>
-                                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                                    <p className="text-white/60">Maintenance</p>
-                                    <p className="mt-1 text-xl font-semibold">{props.metrics.fleet.maintenance}</p>
-                                </div>
-                                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                                    <p className="text-white/60">Admins</p>
-                                    <p className="mt-1 text-xl font-semibold">{props.metrics.users.admins}</p>
-                                </div>
-                                <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                                    <p className="text-white/60">Drivers Unassigned</p>
-                                    <p className="mt-1 text-xl font-semibold">{props.metrics.users.drivers_without_vehicle}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+                <div className="space-y-6 p-4 md:p-6">
+                    {/* Top Stats Section */}
+                    <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
                         {metricCards.map((card) => {
                             const Icon = card.icon;
 
                             return (
-                                <article key={card.title} className="rounded-2xl border bg-white p-5 shadow-sm">
-                                    <div className="flex items-start justify-between">
-                                        <div>
-                                            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">{card.title}</p>
-                                            <p className="mt-3 text-3xl font-semibold text-neutral-900">{card.value}</p>
-                                        </div>
-                                        <div className="rounded-xl bg-neutral-100 p-3 text-neutral-700">
-                                            <Icon className="h-5 w-5" />
+                                <article
+                                    key={card.title}
+                                    className="group rounded-lg border border-slate-200/80 bg-white p-4 shadow-sm transition-all duration-200 hover:border-slate-300 dark:border-slate-800 dark:bg-slate-900"
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <p className="text-xs font-medium text-slate-500 uppercase dark:text-slate-400">{card.title}</p>
+                                        <div className={`rounded-lg p-2.5 transition-transform group-hover:scale-105 ${card.color}`}>
+                                            <Icon className="h-4 w-4" />
                                         </div>
                                     </div>
-                                    <p className="mt-4 text-sm text-neutral-500">{card.detail}</p>
+                                    <p className="mt-2 font-mono text-2xl font-bold text-slate-900 dark:text-white">{card.value}</p>
+                                    <p className="mt-2 flex items-center gap-1 text-[11px] text-slate-500 dark:text-slate-400">
+                                        <TrendingUp className="h-3 w-3 text-emerald-500" />
+                                        {card.detail}
+                                    </p>
                                 </article>
                             );
                         })}
                     </section>
 
-                    <section className="grid grid-cols-1 gap-4 xl:grid-cols-[1.4fr_1fr]">
-                        <article className="rounded-2xl border bg-white p-5 shadow-sm">
-                            <div className="flex items-center justify-between">
+                    {/* Live Fleet Active Dispatches Map Section */}
+                    {/* <section>
+                        <DashboardMapSection dispatches={props.activeDispatches || []} />
+                    </section> */}
+
+                    {/* Chart & Status Breakdowns */}
+                    <section className="grid grid-cols-1 gap-6 xl:grid-cols-[2fr_1fr]">
+                        {/* <article className="rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                            <div className="flex flex-col gap-2 border-b border-slate-100 pb-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
                                 <div>
-                                    <h2 className="text-lg font-semibold text-neutral-900">7-Day Activity</h2>
-                                    <p className="text-sm text-neutral-500">Reservations created versus total logged actions.</p>
+                                    <h2 className="flex items-center gap-2 text-sm font-bold tracking-tight text-slate-900 dark:text-white">
+                                        <Activity className="h-4 w-4 text-sky-500" />
+                                        7-Day Operations & Log Activity
+                                    </h2>
+                                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                                        Daily waybill reservations created versus system events logged.
+                                    </p>
                                 </div>
-                                <div className="flex items-center gap-4 text-xs text-neutral-500">
-                                    <div className="flex items-center gap-2">
-                                        <span className="h-2.5 w-2.5 rounded-full bg-neutral-900" />
+                                <div className="flex items-center gap-4 text-xs font-medium text-slate-600 dark:text-slate-300">
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="h-2.5 w-2.5 rounded-full bg-sky-500 shadow-xs" />
                                         Reservations
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="h-2.5 w-2.5 rounded-full bg-neutral-300" />
+                                    <div className="flex items-center gap-1.5">
+                                        <span className="h-2.5 w-2.5 rounded-full bg-slate-300 dark:bg-slate-700" />
                                         Logs
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="mt-8 grid grid-cols-7 gap-3">
+                            <div className="mt-6 grid grid-cols-7 gap-3 pt-2">
                                 {props.trends.activity.map((point) => (
                                     <div key={point.label} className="flex flex-col items-center gap-3">
-                                        <div className="flex h-56 items-end gap-2">
+                                        <div className="flex h-52 items-end gap-1.5">
                                             <div
-                                                className="w-5 rounded-t-full bg-neutral-900 transition-all"
+                                                className="w-4 rounded-t-lg bg-sky-500 transition-all hover:bg-sky-600"
                                                 style={{ height: `${Math.max(8, (point.reservations / trendMax) * 100)}%` }}
                                                 title={`${point.reservations} reservations`}
                                             />
                                             <div
-                                                className="w-5 rounded-t-full bg-neutral-300 transition-all"
+                                                className="w-4 rounded-t-lg bg-slate-200 transition-all hover:bg-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700"
                                                 style={{ height: `${Math.max(8, (point.activity / trendMax) * 100)}%` }}
                                                 title={`${point.activity} logs`}
                                             />
                                         </div>
                                         <div className="text-center">
-                                            <p className="text-xs font-medium text-neutral-700">{point.label}</p>
-                                            <p className="text-[11px] text-neutral-400">{point.reservations}/{point.activity}</p>
+                                            <p className="text-xs font-semibold text-slate-800 dark:text-slate-200">{point.label}</p>
+                                            <p className="font-mono text-[10px] text-slate-400">
+                                                {point.reservations}/{point.activity}
+                                            </p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
-                        </article>
+                        </article> */}
 
-                        <div className="grid gap-4">
-                            <article className="rounded-2xl border bg-white p-5 shadow-sm">
-                                <h2 className="text-lg font-semibold text-neutral-900">Reservation Statuses</h2>
-                                <div className="mt-4 space-y-4">
+                        {/* Live Fleet Active Dispatches Map Section */}
+                        <section>
+                            <DashboardMapSection dispatches={props.activeDispatches || []} />
+                        </section>
+
+                        <div className="grid gap-6">
+                            {/* Reservation Statuses */}
+                            <article className="rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                                <h2 className="text-sm font-bold text-slate-900 dark:text-white">Reservation Status Breakdown</h2>
+                                <div className="mt-4 space-y-3.5">
                                     {props.breakdowns.reservation_statuses.map((item) => (
                                         <div key={item.label}>
-                                            <div className="flex items-center justify-between text-sm">
-                                                <span className="text-neutral-700">{item.label}</span>
-                                                <span className="text-neutral-500">{item.count} · {item.percentage}%</span>
+                                            <div className="flex items-center justify-between text-xs">
+                                                <span className="font-medium text-slate-700 dark:text-slate-300">{item.label}</span>
+                                                <span className="font-mono font-bold text-slate-900 dark:text-white">
+                                                    {item.count} · {item.percentage}%
+                                                </span>
                                             </div>
-                                            <div className="mt-2 h-2 rounded-full bg-neutral-100">
-                                                <div className="h-2 rounded-full bg-neutral-900" style={{ width: `${item.percentage}%` }} />
+                                            <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                                                <div
+                                                    className="h-full rounded-full bg-sky-500 transition-all duration-300"
+                                                    style={{ width: `${item.percentage}%` }}
+                                                />
                                             </div>
                                         </div>
                                     ))}
                                 </div>
                             </article>
 
-                            <article className="rounded-2xl border bg-white p-5 shadow-sm">
-                                <h2 className="text-lg font-semibold text-neutral-900">Fleet Statuses</h2>
-                                <div className="mt-4 space-y-4">
+                            {/* Fleet Statuses */}
+                            <article className="rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                                <h2 className="text-sm font-bold text-slate-900 dark:text-white">Fleet Availability & Maintenance</h2>
+                                <div className="mt-4 space-y-3.5">
                                     {props.breakdowns.fleet_statuses.map((item) => (
                                         <div key={item.label}>
-                                            <div className="flex items-center justify-between text-sm">
-                                                <span className="text-neutral-700">{item.label}</span>
-                                                <span className="text-neutral-500">{item.count} · {item.percentage}%</span>
+                                            <div className="flex items-center justify-between text-xs">
+                                                <span className="font-medium text-slate-700 dark:text-slate-300">{item.label}</span>
+                                                <span className="font-mono font-bold text-slate-900 dark:text-white">
+                                                    {item.count} · {item.percentage}%
+                                                </span>
                                             </div>
-                                            <div className="mt-2 h-2 rounded-full bg-neutral-100">
-                                                <div className="h-2 rounded-full bg-neutral-700" style={{ width: `${item.percentage}%` }} />
+                                            <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+                                                <div
+                                                    className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                                                    style={{ width: `${item.percentage}%` }}
+                                                />
                                             </div>
                                         </div>
                                     ))}

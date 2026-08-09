@@ -1,7 +1,6 @@
-
-import { Dialog, DialogFooter, DialogTitle, DialogContent, DialogDescription } from './ui/dialog'
-import { Button } from './ui/button'
-import { SetStateAction, useState } from 'react'
+import { Dialog, DialogFooter, DialogTitle, DialogContent, DialogDescription } from './ui/dialog';
+import { Button } from './ui/button';
+import { SetStateAction, useState } from 'react';
 import { Form } from '@inertiajs/react';
 import UserController from '@/actions/App/Http/Controllers/UserController';
 import { Label } from './ui/label';
@@ -10,48 +9,45 @@ import InputError from './input-error';
 import { LoaderCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 
-
 interface CreateUserModalProps {
     setOpen: React.Dispatch<SetStateAction<boolean>>;
 }
 
 const CreateUserModal = ({ setOpen }: CreateUserModalProps) => {
-
     const [selectedRole, setSelectedRole] = useState("");
-    
+
     return (
         <Dialog open={true} onOpenChange={setOpen}>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
+                <DialogTitle>Create User Account</DialogTitle>
+                <DialogDescription>Please fill in user account and role details.</DialogDescription>
 
-                <DialogTitle>Create user</DialogTitle>
-                <DialogDescription>Please fill the fields to create a new user.</DialogDescription>
-
-                <Form {...UserController.create.form()}
+                <Form
+                    {...UserController.create.form()}
                     options={{
                         preserveScroll: true,
                     }}
                     onSuccess={() => setOpen(false)}
-                    >
+                >
                     {({ processing, errors }) => (
-                        <div className="grid gap-6">
+                        <div className="grid gap-4">
                             <div className="grid gap-2">
-                                <Label htmlFor="role">Role</Label>
-                                <Select name='role' value={selectedRole} onValueChange={setSelectedRole}>
+                                <Label htmlFor="role">Account Role</Label>
+                                <Select name="role" value={selectedRole} onValueChange={setSelectedRole}>
                                     <SelectTrigger>
                                         <SelectValue placeholder="Select Role" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value='CUSTOMER'>Customer</SelectItem>
-                                        <SelectItem value='DRIVER'>Diver</SelectItem>
-                                        <SelectItem value='ADMINISTRATOR'>Admin</SelectItem>
+                                        <SelectItem value="CUSTOMER">Customer</SelectItem>
+                                        <SelectItem value="DRIVER">Driver</SelectItem>
+                                        <SelectItem value="ADMINISTRATOR">Admin</SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <InputError message={errors.name} className="mt-2" />
+                                <InputError message={errors.role} className="mt-1" />
                             </div>
 
-
                             <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                                <Label htmlFor="name">Full Name</Label>
                                 <Input
                                     id="name"
                                     type="text"
@@ -60,13 +56,13 @@ const CreateUserModal = ({ setOpen }: CreateUserModalProps) => {
                                     tabIndex={1}
                                     autoComplete="name"
                                     name="name"
-                                    placeholder="Full name"
+                                    placeholder="e.g. Juan Cruz"
                                 />
-                                <InputError message={errors.name} className="mt-2" />
+                                <InputError message={errors.name} />
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                                <Label htmlFor="email">Email Address</Label>
                                 <Input
                                     id="email"
                                     type="email"
@@ -78,6 +74,31 @@ const CreateUserModal = ({ setOpen }: CreateUserModalProps) => {
                                 />
                                 <InputError message={errors.email} />
                             </div>
+
+                            {selectedRole === 'DRIVER' && (
+                                <>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="contact_number">Mobile Contact Number</Label>
+                                        <Input
+                                            id="contact_number"
+                                            type="text"
+                                            name="contact_number"
+                                            placeholder="e.g. 0917-123-4567"
+                                        />
+                                        <InputError message={errors.contact_number} />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="license_number">Driver's License Number</Label>
+                                        <Input
+                                            id="license_number"
+                                            type="text"
+                                            name="license_number"
+                                            placeholder="e.g. N01-12-345678"
+                                        />
+                                        <InputError message={errors.license_number} />
+                                    </div>
+                                </>
+                            )}
 
                             <div className="grid gap-2">
                                 <Label htmlFor="password">Password</Label>
@@ -94,7 +115,7 @@ const CreateUserModal = ({ setOpen }: CreateUserModalProps) => {
                             </div>
 
                             <div className="grid gap-2">
-                                <Label htmlFor="password_confirmation">Confirm password</Label>
+                                <Label htmlFor="password_confirmation">Confirm Password</Label>
                                 <Input
                                     id="password_confirmation"
                                     type="password"
@@ -107,26 +128,21 @@ const CreateUserModal = ({ setOpen }: CreateUserModalProps) => {
                                 <InputError message={errors.password_confirmation} />
                             </div>
 
-
-
-                            <DialogFooter>
-                                <Button type='button' variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
-                                <Button type="submit">
-                                    {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-                                    Create account
+                            <DialogFooter className="mt-2">
+                                <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+                                    Cancel
+                                </Button>
+                                <Button type="submit" disabled={processing} className="bg-sky-600 font-semibold text-white hover:bg-sky-700">
+                                    {processing && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                                    Create Account
                                 </Button>
                             </DialogFooter>
                         </div>
                     )}
                 </Form>
-
-
-
-
             </DialogContent>
-
         </Dialog>
-    )
-}
+    );
+};
 
-export default CreateUserModal
+export default CreateUserModal;

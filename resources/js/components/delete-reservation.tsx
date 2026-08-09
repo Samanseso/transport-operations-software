@@ -42,7 +42,7 @@ export const DeleteReservation = ({ reservation_id, isOpen, updateTable, setIsOp
                         <>
                             <DialogFooter className="gap-2">
                                 <DialogClose asChild>
-                                    <Button variant="secondary" onClick={() => resetAndClearErrors()}>
+                                    <Button type="button" variant="secondary" onClick={() => { resetAndClearErrors(); setIsOpen(false); }}>
                                         Cancel
                                     </Button>
                                 </DialogClose>

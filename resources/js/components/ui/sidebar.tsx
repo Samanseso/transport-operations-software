@@ -1,7 +1,7 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps, cva } from "class-variance-authority"
-import { Bell, BookOpen, Calendar, CalendarDays, File, Folder, LayoutGrid, Mail, MapPin, PanelLeftIcon, Route, Truck, User } from "lucide-react"
+import { Bell, BookOpen, Building2, Calendar, CalendarDays, CreditCard, DollarSign, File, Folder, LayoutGrid, Mail, MapPin, PanelLeftIcon, Route, ShieldCheck, Truck, User, Users } from "lucide-react"
 
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
@@ -33,7 +33,7 @@ const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
 
-const navItems: SidebarNavItems = {
+export const navItems: SidebarNavItems = {
 
 	generalNavItems: [
 		{
@@ -47,7 +47,7 @@ const navItems: SidebarNavItems = {
 			title: 'Users',
 			href: "/users",
 			icon: User,
-			roles: ["ADMINISTRATOR"],
+			roles: ["ADMINISTRATOR", "DISPATCHER"],
 		},
 	],
 
@@ -57,13 +57,6 @@ const navItems: SidebarNavItems = {
 			href: '/reservations',
 			icon: CalendarDays,
 			roles: ["ADMINISTRATOR"],
-		},
-
-		{
-			title: 'Announcements',
-			href: '/announcements',
-			icon: Bell,
-			roles: ["all"],
 		},
 
 		{
@@ -81,12 +74,18 @@ const navItems: SidebarNavItems = {
 		},
 
 		{
+			title: 'My Invoices',
+			href: '/customer/invoices',
+			icon: CreditCard,
+			roles: ["CUSTOMER"],
+		},
+
+		{
 			title: 'Active Dispatches',
 			href: '/active-dispatches',
 			icon: MapPin,
 			roles: ["ADMINISTRATOR"],
 		},
-
 
 		{
 			title: 'Fleet Management',
@@ -95,6 +94,12 @@ const navItems: SidebarNavItems = {
 			roles: ["ADMINISTRATOR"],
 		},
 
+		{
+			title: 'Finance & Invoices',
+			href: '/finance/invoices',
+			icon: CreditCard,
+			roles: ["ADMINISTRATOR"],
+		},
 
 		{
 			title: 'System Logs',
@@ -111,9 +116,16 @@ const navItems: SidebarNavItems = {
 		},
 
 		{
-			title: 'My Fleet',
-			href: '/my-fleet',
-			icon: Truck,
+			title: 'Pre-Trip Inspection',
+			href: '/driver/inspection',
+			icon: ShieldCheck,
+			roles: ["DRIVER"],
+		},
+
+		{
+			title: 'Log Expenses',
+			href: '/driver/expenses',
+			icon: DollarSign,
 			roles: ["DRIVER"],
 		},
 	],

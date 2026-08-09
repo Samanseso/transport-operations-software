@@ -22,6 +22,8 @@ import { Transition } from '@headlessui/react';
 import InputError from '@/components/input-error';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
+import { CustomerCombobox } from '@/components/customer-combobox';
+
 const transportOptions = [
     "Leisure / Personal Transport",
     "Corporate / Institutional Transport",
@@ -33,9 +35,9 @@ const transportOptions = [
 
 
 const Details = () => {
-
-    const { props } = usePage<{
+    const page = usePage<SharedData & {
         customer_id: string | undefined,
+        customers?: { id: string | number; name: string; email: string }[],
         service_type: string | undefined,
         time: string | undefined,
         cargo_details: string | undefined,
@@ -43,6 +45,10 @@ const Details = () => {
         edit_mode?: boolean,
         edit_reservation_id?: string,
     }>();
+
+    const { props } = page;
+    const userRole = props.auth?.user?.role || 'CUSTOMER';
+    const isCustomerRole = userRole === 'CUSTOMER';
 
     const editMode = Boolean(props.edit_mode && props.edit_reservation_id);
     const editId = props.edit_reservation_id;
@@ -56,7 +62,9 @@ const Details = () => {
     ];
 
     const [selectedService, setSelectedService] = useState<string | undefined>(props.service_type);
-
+    const [selectedCustomerId, setSelectedCustomerId] = useState<string>(
+        props.customer_id || (isCustomerRole ? String(props.auth?.user?.id || '') : '')
+    );
 
     return (
         <SidebarProvider>
@@ -72,27 +80,25 @@ const Details = () => {
 
                         {({ processing, errors }) => (
                             <div className='space-y-12 md:max-w-xl'>
-                                {/* <div className='space-y-6'>
-                                    <HeadingSmall title="Customer" description="Enter customer name and contact details" />
-
-                                    <div className="grid gap-2">
-                                        <Label htmlFor="customer_id">Name</Label>   
-
-                                        <Input
-                                            id="customer_id"
-                                            className="mt-1 block w-full"
-                                            defaultValue={props.customer_id || ""}
-                                            name="customer_id"
-                                            required
-                                            placeholder="Full name"
+                                {isCustomerRole ? (
+                                    <input type="hidden" name="customer_id" value={props.auth?.user?.id} />
+                                ) : (
+                                    <div className="space-y-6">
+                                        <HeadingSmall
+                                            title="Customer Account"
+                                            description="Search and tag target client for this booking"
                                         />
-
-                                        <InputError className="mt-2" message={errors.name} />
-
+                                        <div className="grid gap-2">
+                                            <Label>Client / Account *</Label>
+                                            <CustomerCombobox
+                                                customers={props.customers || []}
+                                                selectedCustomerId={selectedCustomerId}
+                                                onSelectCustomer={setSelectedCustomerId}
+                                            />
+                                            <InputError message={errors.customer_id} />
+                                        </div>
                                     </div>
-                                </div> */}
-
-                                <input type="hidden" name="customer_id" value={props.customer_id} />
+                                )}
 
                                 <div className='space-y-6'>
                                     <HeadingSmall title="Service and time" description="Select service type and requested date time" />
@@ -133,42 +139,68 @@ const Details = () => {
 
 
                                 <div className='space-y-6'>
-                                    <HeadingSmall title="Freight" description="Enter cargo details and other notes" />
+                                    <HeadingSmall title="Cargo & Payload Specifications" description="Enter cargo category, weight, and handling notes" />
+
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="cargo_type">Cargo Category / Classification</Label>
+                                            <Select name="cargo_type" defaultValue="General Freight">
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select Cargo Type" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="General Freight">📦 General Freight</SelectItem>
+                                                    <SelectItem value="Dry Goods">🧱 Dry Goods & Construction</SelectItem>
+                                                    <SelectItem value="Cold Chain">❄️ Cold Chain / Perishables</SelectItem>
+                                                    <SelectItem value="Fragile">🍷 Fragile / Glassware</SelectItem>
+                                                    <SelectItem value="Heavy Equipment">🏗️ Heavy Equipment</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                        </div>
+
+                                        <div className="grid gap-2">
+                                            <Label htmlFor="cargo_weight_kg">Estimated Cargo Weight (kg) *</Label>
+                                            <Input
+                                                id="cargo_weight_kg"
+                                                type="number"
+                                                min="0"
+                                                name="cargo_weight_kg"
+                                                defaultValue="100"
+                                                placeholder="e.g. 500"
+                                                required
+                                            />
+                                            <InputError className="mt-1" message={errors.cargo_weight_kg} />
+                                        </div>
+                                    </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="cargo_details">Cargo details</Label>
+                                        <Label htmlFor="cargo_details">Cargo description & dimensions</Label>
 
                                         <Input
                                             id="cargo_details"
                                             className="mt-1 block w-full"
                                             defaultValue={props.cargo_details}
                                             name="cargo_details"
-                                            placeholder="Description, weight, dimensions..."
+                                            placeholder="Description, pallet count, dimensions..."
                                             required={false}
                                         />
-
-
-
                                     </div>
 
                                     <div className="grid gap-2">
-                                        <Label htmlFor="special_instructions">Special insstructions</Label>
+                                        <Label htmlFor="special_instructions">Special handling instructions</Label>
 
                                         <Input
                                             id="special_instructions"
                                             className="mt-1 block w-full"
                                             defaultValue={props.special_instructions}
                                             name="special_instructions"
-                                            placeholder="Time windows, site access..."
+                                            placeholder="Time windows, site gate access, fork-lift needed..."
                                             required={false}
                                         />
-
-
-
                                     </div>
 
                                     <div className="flex items-center gap-4">
-                                        <Button disabled={processing}>Save</Button>
+                                        <Button disabled={processing}>Save & Proceed</Button>
                                     </div>
                                 </div>
 
