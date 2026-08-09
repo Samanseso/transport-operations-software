@@ -66,7 +66,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('role', 50)->nullable();
-            $table->string('role_id', 20)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->string('remember_token', 100)->nullable();
@@ -186,14 +185,15 @@ return new class extends Migration
 
         Schema::create('customers', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->charset = 'latin1';
-            $table->collation = 'latin1_swedish_ci';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
 
             $table->string('customer_id')->primary();
-            $table->string('customer_name', 150);
-            $table->string('email', 150);
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('contact_number', 150);
             $table->string('created_at', 50);
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -205,16 +205,18 @@ return new class extends Migration
 
         Schema::create('drivers', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->charset = 'latin1';
-            $table->collation = 'latin1_swedish_ci';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
 
             $table->string('driver_id', 20)->primary();
-            $table->string('name', 100);
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('license_number', 50)->nullable();
             $table->string('status', 20)->default('Active');
-            $table->string('created_at', 20);
-            $table->string('updated_at', 20);
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -226,8 +228,8 @@ return new class extends Migration
 
         Schema::create('vehicles', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->charset = 'latin1';
-            $table->collation = 'latin1_swedish_ci';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
 
             $table->string('vehicle_id', 20)->primary();
             $table->string('driver_id', 50);
@@ -235,8 +237,8 @@ return new class extends Migration
             $table->string('model', 100);
             $table->string('capacity', 50)->nullable();
             $table->string('status', 20)->default('Available');
-            $table->string('created_at', 20);
-            $table->string('updated_at', 20);
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 
@@ -248,8 +250,8 @@ return new class extends Migration
 
         Schema::create('pricing', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->charset = 'latin1';
-            $table->collation = 'latin1_swedish_ci';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
 
             $table->string('pricing_id', 20)->primary();
             $table->string('service_type', 100);
@@ -267,15 +269,15 @@ return new class extends Migration
 
         Schema::create('reservations', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->charset = 'latin1';
-            $table->collation = 'latin1_swedish_ci';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
 
             $table->string('reservation_id')->primary();
             $table->string('customer_id')->nullable()->index();
             $table->string('customer_name', 100)->nullable();
             $table->string('email')->nullable();
             $table->string('contact')->nullable();
-            $table->string('status', 20)->nullable()->default('PENDING');
+            $table->string('status', 50)->nullable()->default('PENDING');
             $table->string('pickup_address');
             $table->string('pickup_latlng', 100);
             $table->string('dropoff_address');
@@ -285,8 +287,8 @@ return new class extends Migration
             $table->string('service_type', 50);
             $table->string('cargo_details')->nullable();
             $table->string('special_instructions')->nullable();
-            $table->string('created_at', 20);
-            $table->string('updated_at', 20);
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->nullable();
         });
     }
 
@@ -298,8 +300,8 @@ return new class extends Migration
 
         Schema::create('dispatches', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->charset = 'latin1';
-            $table->collation = 'latin1_swedish_ci';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
 
             $table->string('reservation_id')->primary();
             $table->string('status', 50)->nullable();
@@ -319,15 +321,15 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->charset = 'utf8mb4';
-            $table->collation = 'utf8mb4_general_ci';
+            $table->collation = 'utf8mb4_unicode_ci';
 
-            $this->latinString($table, 'reservation_id', 20)->primary();
-            $this->latinString($table, 'distance', 20);
-            $this->latinString($table, 'travel_time', 20);
-            $this->latinString($table, 'total_amount', 20);
-            $this->latinString($table, 'payment_method', 50);
-            $this->latinString($table, 'reference_number', 50);
-            $this->latinString($table, 'paid_at', 20);
+            $table->string('reservation_id', 20)->primary();
+            $table->string('distance', 20);
+            $table->string('travel_time', 20);
+            $table->string('total_amount', 20);
+            $table->string('payment_method', 50);
+            $table->string('reference_number', 50);
+            $table->string('paid_at', 20);
         });
     }
 
@@ -339,9 +341,10 @@ return new class extends Migration
 
         Schema::create('logs', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->charset = 'latin1';
-            $table->collation = 'latin1_swedish_ci';
+            $table->charset = 'utf8mb4';
+            $table->collation = 'utf8mb4_unicode_ci';
 
+            $table->id();
             $table->string('datelog', 50);
             $table->string('timelog', 50);
             $table->string('action', 50)->nullable();
@@ -368,8 +371,7 @@ return new class extends Migration
             $table->longText('description');
             $table->dateTime('starts_at');
             $table->dateTime('ends_at')->nullable();
-            $table->string('venue');
-            $table->string('organizer')->nullable();
+            $table->string('type', 50)->default('GENERAL');
             $table->string('audience', 50)->default('ALL');
             $table->string('status', 50)->default('DRAFT');
             $table->unsignedInteger('capacity')->nullable();
@@ -387,21 +389,5 @@ return new class extends Migration
             $table->index(['audience', 'status']);
             $table->index('is_featured');
         });
-    }
-
-    private function latinString(Blueprint $table, string $column, int $length): ColumnDefinition
-    {
-        $definition = $table->string($column, $length);
-
-        if ($this->usesMysqlGrammar()) {
-            $definition->charset('latin1')->collation('latin1_swedish_ci');
-        }
-
-        return $definition;
-    }
-
-    private function usesMysqlGrammar(): bool
-    {
-        return in_array(Schema::getConnection()->getDriverName(), ['mysql', 'mariadb'], true);
     }
 };

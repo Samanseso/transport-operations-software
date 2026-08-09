@@ -9,10 +9,9 @@ class SystemLog extends Model
     protected $table = 'logs';
 
     public $timestamps = false;
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'datelog',
         'timelog',
         'action',

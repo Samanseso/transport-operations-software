@@ -1,26 +1,16 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     public function up(): void
     {
-        if (Schema::hasTable('users') && Schema::hasColumn('users', 'role_id')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->dropColumn('role_id');
-            });
-        }
+        // Changes baked into base migration 2026_05_06_232036.
     }
 
     public function down(): void
     {
-        if (Schema::hasTable('users') && ! Schema::hasColumn('users', 'role_id')) {
-            Schema::table('users', function (Blueprint $table) {
-                $table->string('role_id', 50)->nullable()->after('role');
-            });
-        }
+        //
     }
 };
