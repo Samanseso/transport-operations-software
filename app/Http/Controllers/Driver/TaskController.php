@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Driver;
 
 use App\Http\Controllers\Controller;
+use App\Models\Driver;
 use App\Models\Vehicle;
 use App\Models\Dispatch;
 use App\Models\Reservation;
@@ -17,7 +18,8 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $driver = Driver::where('user_id', $request->user()->id)->first();
+        $user = $request->user();
+        $driver = \App\Models\Driver::where('user_id', $user?->id)->first();
         $driver_id = $driver ? $driver->driver_id : null;
         $assigned_vehicle = $driver_id ? Vehicle::where('driver_id', $driver_id)->first()?->vehicle_id : null;
 

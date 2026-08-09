@@ -16,7 +16,7 @@ class ExpenseController extends Controller
     public function index(Request $request): Response
     {
         $user = $request->user();
-        $driver = Driver::where('user_id', $user->id)->orWhere('driver_id', $user->role_id)->first();
+        $driver = \App\Models\Driver::where('user_id', $user?->id)->first();
         $driverId = $driver ? $driver->driver_id : $user->id;
 
         $expenses = DriverExpense::where('driver_id', (string) $driverId)
@@ -32,7 +32,7 @@ class ExpenseController extends Controller
     public function store(Request $request)
     {
         $user = $request->user();
-        $driver = Driver::where('user_id', $user->id)->orWhere('driver_id', $user->role_id)->first();
+        $driver = \App\Models\Driver::where('user_id', $user?->id)->first();
         $driverId = $driver ? $driver->driver_id : (string) $user->id;
 
         $validated = $request->validate([
