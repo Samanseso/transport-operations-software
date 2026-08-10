@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\Driver\TaskController::index
- * @see app/Http/Controllers/Driver/TaskController.php:18
+ * @see app/Http/Controllers/Driver/TaskController.php:19
  * @route '/tasks'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::index
- * @see app/Http/Controllers/Driver/TaskController.php:18
+ * @see app/Http/Controllers/Driver/TaskController.php:19
  * @route '/tasks'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::index
- * @see app/Http/Controllers/Driver/TaskController.php:18
+ * @see app/Http/Controllers/Driver/TaskController.php:19
  * @route '/tasks'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \App\Http\Controllers\Driver\TaskController::index
- * @see app/Http/Controllers/Driver/TaskController.php:18
+ * @see app/Http/Controllers/Driver/TaskController.php:19
  * @route '/tasks'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \App\Http\Controllers\Driver\TaskController::index
- * @see app/Http/Controllers/Driver/TaskController.php:18
+ * @see app/Http/Controllers/Driver/TaskController.php:19
  * @route '/tasks'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \App\Http\Controllers\Driver\TaskController::index
- * @see app/Http/Controllers/Driver/TaskController.php:18
+ * @see app/Http/Controllers/Driver/TaskController.php:19
  * @route '/tasks'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \App\Http\Controllers\Driver\TaskController::index
- * @see app/Http/Controllers/Driver/TaskController.php:18
+ * @see app/Http/Controllers/Driver/TaskController.php:19
  * @route '/tasks'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \App\Http\Controllers\Driver\TaskController::show
- * @see app/Http/Controllers/Driver/TaskController.php:35
+ * @see app/Http/Controllers/Driver/TaskController.php:37
  * @route '/tasks/{reservation_id}'
  */
 export const show = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::show
- * @see app/Http/Controllers/Driver/TaskController.php:35
+ * @see app/Http/Controllers/Driver/TaskController.php:37
  * @route '/tasks/{reservation_id}'
  */
 show.url = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -122,7 +122,7 @@ show.url = (args: { reservation_id: string | number } | [reservation_id: string 
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::show
- * @see app/Http/Controllers/Driver/TaskController.php:35
+ * @see app/Http/Controllers/Driver/TaskController.php:37
  * @route '/tasks/{reservation_id}'
  */
 show.get = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -131,7 +131,7 @@ show.get = (args: { reservation_id: string | number } | [reservation_id: string 
 })
 /**
 * @see \App\Http\Controllers\Driver\TaskController::show
- * @see app/Http/Controllers/Driver/TaskController.php:35
+ * @see app/Http/Controllers/Driver/TaskController.php:37
  * @route '/tasks/{reservation_id}'
  */
 show.head = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -141,7 +141,7 @@ show.head = (args: { reservation_id: string | number } | [reservation_id: string
 
     /**
 * @see \App\Http\Controllers\Driver\TaskController::show
- * @see app/Http/Controllers/Driver/TaskController.php:35
+ * @see app/Http/Controllers/Driver/TaskController.php:37
  * @route '/tasks/{reservation_id}'
  */
     const showForm = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -151,7 +151,7 @@ show.head = (args: { reservation_id: string | number } | [reservation_id: string
 
             /**
 * @see \App\Http\Controllers\Driver\TaskController::show
- * @see app/Http/Controllers/Driver/TaskController.php:35
+ * @see app/Http/Controllers/Driver/TaskController.php:37
  * @route '/tasks/{reservation_id}'
  */
         showForm.get = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -160,7 +160,7 @@ show.head = (args: { reservation_id: string | number } | [reservation_id: string
         })
             /**
 * @see \App\Http\Controllers\Driver\TaskController::show
- * @see app/Http/Controllers/Driver/TaskController.php:35
+ * @see app/Http/Controllers/Driver/TaskController.php:37
  * @route '/tasks/{reservation_id}'
  */
         showForm.head = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -176,7 +176,7 @@ show.head = (args: { reservation_id: string | number } | [reservation_id: string
     show.form = showForm
 /**
 * @see \App\Http\Controllers\Driver\TaskController::update
- * @see app/Http/Controllers/Driver/TaskController.php:43
+ * @see app/Http/Controllers/Driver/TaskController.php:45
  * @route '/tasks/location'
  */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::update
- * @see app/Http/Controllers/Driver/TaskController.php:43
+ * @see app/Http/Controllers/Driver/TaskController.php:45
  * @route '/tasks/location'
  */
 update.url = (options?: RouteQueryOptions) => {
@@ -200,7 +200,7 @@ update.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::update
- * @see app/Http/Controllers/Driver/TaskController.php:43
+ * @see app/Http/Controllers/Driver/TaskController.php:45
  * @route '/tasks/location'
  */
 update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -210,7 +210,7 @@ update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \App\Http\Controllers\Driver\TaskController::update
- * @see app/Http/Controllers/Driver/TaskController.php:43
+ * @see app/Http/Controllers/Driver/TaskController.php:45
  * @route '/tasks/location'
  */
     const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -220,7 +220,7 @@ update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \App\Http\Controllers\Driver\TaskController::update
- * @see app/Http/Controllers/Driver/TaskController.php:43
+ * @see app/Http/Controllers/Driver/TaskController.php:45
  * @route '/tasks/location'
  */
         updateForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -231,7 +231,7 @@ update.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     update.form = updateForm
 /**
 * @see \App\Http\Controllers\Driver\TaskController::updateStatus
- * @see app/Http/Controllers/Driver/TaskController.php:64
+ * @see app/Http/Controllers/Driver/TaskController.php:66
  * @route '/tasks/{reservation_id}/status'
  */
 export const updateStatus = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -246,7 +246,7 @@ updateStatus.definition = {
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::updateStatus
- * @see app/Http/Controllers/Driver/TaskController.php:64
+ * @see app/Http/Controllers/Driver/TaskController.php:66
  * @route '/tasks/{reservation_id}/status'
  */
 updateStatus.url = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -274,7 +274,7 @@ updateStatus.url = (args: { reservation_id: string | number } | [reservation_id:
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::updateStatus
- * @see app/Http/Controllers/Driver/TaskController.php:64
+ * @see app/Http/Controllers/Driver/TaskController.php:66
  * @route '/tasks/{reservation_id}/status'
  */
 updateStatus.post = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -284,7 +284,7 @@ updateStatus.post = (args: { reservation_id: string | number } | [reservation_id
 
     /**
 * @see \App\Http\Controllers\Driver\TaskController::updateStatus
- * @see app/Http/Controllers/Driver/TaskController.php:64
+ * @see app/Http/Controllers/Driver/TaskController.php:66
  * @route '/tasks/{reservation_id}/status'
  */
     const updateStatusForm = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -294,7 +294,7 @@ updateStatus.post = (args: { reservation_id: string | number } | [reservation_id
 
             /**
 * @see \App\Http\Controllers\Driver\TaskController::updateStatus
- * @see app/Http/Controllers/Driver/TaskController.php:64
+ * @see app/Http/Controllers/Driver/TaskController.php:66
  * @route '/tasks/{reservation_id}/status'
  */
         updateStatusForm.post = (args: { reservation_id: string | number } | [reservation_id: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -305,7 +305,7 @@ updateStatus.post = (args: { reservation_id: string | number } | [reservation_id
     updateStatus.form = updateStatusForm
 /**
 * @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
- * @see app/Http/Controllers/Driver/TaskController.php:122
+ * @see app/Http/Controllers/Driver/TaskController.php:124
  * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
  */
 export const updateWaypointPod = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -320,7 +320,7 @@ updateWaypointPod.definition = {
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
- * @see app/Http/Controllers/Driver/TaskController.php:122
+ * @see app/Http/Controllers/Driver/TaskController.php:124
  * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
  */
 updateWaypointPod.url = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions) => {
@@ -346,7 +346,7 @@ updateWaypointPod.url = (args: { reservation_id: string | number, waypoint_index
 
 /**
 * @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
- * @see app/Http/Controllers/Driver/TaskController.php:122
+ * @see app/Http/Controllers/Driver/TaskController.php:124
  * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
  */
 updateWaypointPod.post = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -356,7 +356,7 @@ updateWaypointPod.post = (args: { reservation_id: string | number, waypoint_inde
 
     /**
 * @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
- * @see app/Http/Controllers/Driver/TaskController.php:122
+ * @see app/Http/Controllers/Driver/TaskController.php:124
  * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
  */
     const updateWaypointPodForm = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -366,7 +366,7 @@ updateWaypointPod.post = (args: { reservation_id: string | number, waypoint_inde
 
             /**
 * @see \App\Http\Controllers\Driver\TaskController::updateWaypointPod
- * @see app/Http/Controllers/Driver/TaskController.php:122
+ * @see app/Http/Controllers/Driver/TaskController.php:124
  * @route '/tasks/{reservation_id}/waypoint/{waypoint_index}/pod'
  */
         updateWaypointPodForm.post = (args: { reservation_id: string | number, waypoint_index: string | number } | [reservation_id: string | number, waypoint_index: string | number ], options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

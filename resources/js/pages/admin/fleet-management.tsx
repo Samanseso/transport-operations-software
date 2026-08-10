@@ -237,23 +237,23 @@ const FleetManagement = () => {
 
                                 <div>
                                     {/* Recent Logs of vehicles */}
-                                    <div className="rounded-lg border bg-white p-5 shadow-sm">
-                                        <div className="flex items-center justify-between">
-                                            <p className="font-semibold">Recent Vehicle Logs</p>
-                                            <span className="text-xs text-gray-500">Latest 5</span>
+                                    <div className="rounded-lg border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+                                        <div className="flex items-center justify-between border-b border-slate-100 pb-3 dark:border-slate-800">
+                                            <p className="font-semibold text-slate-900 dark:text-white">Recent Vehicle Logs</p>
+                                            <span className="text-xs text-slate-500 dark:text-slate-400">Latest 5</span>
                                         </div>
                                         <div className="mt-4 space-y-3">
-                                            {props.recentVehicleLogs.length === 0 && <p className="text-sm text-gray-500">No recent vehicle logs.</p>}
+                                            {props.recentVehicleLogs.length === 0 && <p className="text-sm text-slate-500 dark:text-slate-400">No recent vehicle logs.</p>}
                                             {props.recentVehicleLogs.map((log, index) => (
                                                 <div
                                                     key={`${log.datelog}-${log.timelog}-${index}`}
-                                                    className="flex items-start justify-between gap-3"
+                                                    className="flex items-start justify-between gap-3 border-b border-slate-50 pb-2.5 last:border-0 last:pb-0 dark:border-slate-800/50"
                                                 >
                                                     <div className="flex-1">
-                                                        <p className="text-sm text-gray-700">{log.description}</p>
-                                                        <p className="text-xs text-gray-400">{log.performed_to}</p>
+                                                        <p className="text-sm font-medium text-slate-800 dark:text-slate-200">{log.description}</p>
+                                                        <p className="text-xs text-slate-400 dark:text-slate-500">{log.performed_to}</p>
                                                     </div>
-                                                    <div className="text-right text-[11px] text-gray-400">
+                                                    <div className="text-right text-[11px] text-slate-400 dark:text-slate-500">
                                                         <div>{log.datelog}</div>
                                                         <div>{log.timelog}</div>
                                                     </div>

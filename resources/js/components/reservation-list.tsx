@@ -1,7 +1,7 @@
 import { show, step } from '@/routes/reservations';
 import { PaginationType, type Reservation } from '@/types';
 import { Link, router, usePage } from '@inertiajs/react';
-import { Eye, LayoutGrid, MapPin, PackageSearch, PenBox, Plus, Printer, SlidersHorizontal, Table as TableIcon, Trash, X } from 'lucide-react';
+import { Eye, LayoutGrid, MapPin, PackageSearch, PenBox, Plus, Printer, Table as TableIcon, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import '../bootstrap';
 import { DeleteReservation } from './delete-reservation';
@@ -65,11 +65,7 @@ export default function ReseravtionList({ reservations }: { reservations: Pagina
         };
     }, []);
 
-    const submitWithFilters = (overrides?: {
-        q?: string;
-        status?: string;
-        service_type?: string;
-    }) => {
+    const submitWithFilters = (overrides?: { q?: string; status?: string; service_type?: string }) => {
         const q = overrides?.q !== undefined ? overrides.q : searchInput;
         const status = overrides?.status !== undefined ? overrides.status : statusFilter;
         const service_type = overrides?.service_type !== undefined ? overrides.service_type : serviceTypeFilter;
@@ -117,7 +113,7 @@ export default function ReseravtionList({ reservations }: { reservations: Pagina
     return (
         <div className="space-y-4">
             {/* Header & Filter Controls Bar */}
-            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between dark:border-slate-800 dark:bg-slate-900">
+            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Reservations</h2>
                     <p className="text-xs text-slate-500">Manage active line-haul shipments, waybill dispatches, and consignment tracking.</p>

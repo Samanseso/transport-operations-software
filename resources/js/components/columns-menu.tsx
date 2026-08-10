@@ -28,12 +28,12 @@ export function ColumnsMenu({ columns, visibleColumns, setVisibleColumns }: Colu
             </DropdownMenuTrigger>
 
             <DropdownMenuContent
-                className="w-45 mt-1 p-2 rounded-xl border border-white/5 bg-white shadow"
+                className="w-45 mt-1 p-2 rounded-xl border border-slate-200 bg-white p-3 shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-100"
                 align='start'
             >
                 {columns.map((column, index) => {
                     return (
-                        <div key={index} className="flex items-center space-x-2 my-3">
+                        <div key={index} className="flex items-center space-x-2 my-2.5">
                             <Checkbox
                                 disabled={index <= 0}
                                 id={column}
@@ -49,7 +49,7 @@ export function ColumnsMenu({ columns, visibleColumns, setVisibleColumns }: Colu
                                     });
                                 }}
                             />
-                            <Label htmlFor={column} className="text-nowrap">{column}</Label>
+                            <Label htmlFor={column} className="text-nowrap text-xs text-slate-700 dark:text-slate-200 cursor-pointer">{column}</Label>
                         </div>
 
                     )
