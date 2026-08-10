@@ -22,7 +22,7 @@ php artisan cache:clear
 
 # Run database migrations (drop all tables first, recreate & seed)
 # php artisan migrate:fresh --seed --force
-php artisan migrate
+php artisan migrate --force
 
 # Start supervisor
 exec "$@"
